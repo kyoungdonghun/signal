@@ -44,8 +44,12 @@ public class OutcomeRecordEntity {
         return e;
     }
 
-    public Long getId()              { return id; }
-    public String getRunId()         { return runId; }
-    public Double getPrice1wAfter()  { return price1wAfter; }
+    public Long getId()                   { return id; }
+    public String getRunId()              { return runId; }
+    public String getTicker()             { return ticker; }
+    public LocalDateTime getRecordedAt()  { return recordedAt; }
+    public Double getPrice1dAfter()       { return price1dAfter; }
+    public Double getPrice1wAfter()       { return price1wAfter; }
+    public Double getPriceChangePct()     { return priceChangePct; }
     public void setPrice1wAfter(Double v) { this.price1wAfter = v; }
 }

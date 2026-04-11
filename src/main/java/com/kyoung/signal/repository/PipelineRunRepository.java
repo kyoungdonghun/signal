@@ -23,4 +23,11 @@ public interface PipelineRunRepository extends JpaRepository<PipelineRunEntity, 
         @Param("from") LocalDateTime from,
         @Param("to") LocalDateTime to
     );
+
+    // ticker별 최신 run 조회 (브리핑 페이지용)
+    @Query("SELECT r FROM PipelineRunEntity r WHERE r.executedAt = (SELECT MAX(r2.executedAt) FROM PipelineRunEntity r2 WHERE r2.ticker = r.ticker)")
+    List<PipelineRunEntity> findLatestPerTicker();
+
+    // 최근 N개 run (트랙레코드용)
+    List<PipelineRunEntity> findTop50ByOrderByExecutedAtDesc();
 }

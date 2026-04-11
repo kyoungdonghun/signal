@@ -79,6 +79,14 @@ public class PipelineRunEntity {
     public String getRunId()             { return runId; }
     public String getTicker()            { return ticker; }
     public LocalDateTime getExecutedAt() { return executedAt; }
+    public String getStability()         { return stability; }
+    public String getTrConfidence()      { return trConfidence; }
     public String getCrossResult()       { return crossResult; }
+    public String getCaConfidence()      { return caConfidence; }
     public Double getPrice()             { return price; }
+    public Double getMa20()              { return ma20; }
+    public Double getMa60()              { return ma60; }
+    public Double getRsi()               { return rsi; }
+    public Double getVolumeRatio()       { return volumeRatio; }
+    public String getFullResult()        { return fullResult; }
 }
