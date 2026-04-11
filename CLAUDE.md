@@ -90,7 +90,7 @@ Codex가 SIGNAL을 쓸 때는 `AGENTS.md` + `.codex/` 설정만 추가하면 된
 | Frontend | React | Phase 2 이후 대시보드 구현 |
 | Database | MySQL | |
 | Price Data | Yahoo Finance HTTP API | Java HttpClient 직접 호출. yfinance 미사용. |
-| News | RSS Feed (Rome Library) | Phase 1: CNBC, 한국경제, 연합뉴스 (Reuters RSS 서비스 종료로 대체) |
+| News | RSS Feed (Rome Library) | Phase 1: CNBC(`/id/100003114/device/rss/rss.html`), 한국경제(`/feed/all-news`), 연합뉴스(`/rss/economy.xml`) — Reuters RSS 종료 |
 | AI Analysis | Claude API (claude-sonnet-4-20250514) | Java HttpClient 직접 호출 |
 | Technical Indicators | **직접 구현** | **TA-Lib, ta4j 등 외부 라이브러리 사용 금지.** |
 
