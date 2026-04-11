@@ -59,7 +59,7 @@ public class ClaudeApiClient {
     private String buildRequestBody(String systemPrompt, String userMessage) throws Exception {
         ObjectNode body = objectMapper.createObjectNode();
         body.put("model", model);
-        body.put("max_tokens", 1024);
+        body.put("max_tokens", 8192);
         body.put("system", systemPrompt);
 
         ArrayNode messages = body.putArray("messages");

@@ -40,9 +40,7 @@ public class PipelineService {
 
         // NI Pipeline: NC → NT (NF 생략 — Phase 1 단순화)
         List<NewsItem> news = rssFeedClient.fetch(rssFeedUrl, rssFeedSource);
-        List<NtService.NtResult> taggedNews = news.stream()
-                .map(item -> ntService.tag(runId, item, ticker))
-                .toList();
+        List<NtService.NtResult> taggedNews = ntService.tagBatch(runId, news, ticker);
 
         return new PipelineResult(runId, ticker, Instant.now().toString(), technical, taggedNews);
     }

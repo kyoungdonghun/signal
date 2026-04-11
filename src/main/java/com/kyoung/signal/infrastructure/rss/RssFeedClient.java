@@ -7,7 +7,11 @@ import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import org.springframework.stereotype.Component;
 
-import java.net.URL;
+import java.io.ByteArrayInputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,15 +20,35 @@ import java.util.stream.Collectors;
 public class RssFeedClient {
 
     private static final int EXCERPT_LENGTH = 300;
+    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
+
+    private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public List<NewsItem> fetch(String feedUrl, String sourceName) {
         try {
-            SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(feedUrl)));
+            // Java HttpClient로 직접 가져와 User-Agent 설정 (봇 차단 우회)
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(feedUrl))
+                    .header("User-Agent", USER_AGENT)
+                    .GET()
+                    .build();
+
+            HttpResponse<byte[]> response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
+
+            if (response.statusCode() != 200) {
+                throw new RuntimeException("RSS 피드 HTTP 오류: " + response.statusCode());
+            }
+
+            SyndFeed feed = new SyndFeedInput().build(
+                    new XmlReader(new ByteArrayInputStream(response.body()))
+            );
 
             return feed.getEntries().stream()
                     .map(entry -> toNewsItem(entry, sourceName))
                     .collect(Collectors.toList());
 
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException("RSS 피드 수집 실패 (source=" + sourceName + ", url=" + feedUrl + ")", e);
         }
