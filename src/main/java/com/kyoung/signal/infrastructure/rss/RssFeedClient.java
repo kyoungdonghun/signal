@@ -22,14 +22,22 @@ public class RssFeedClient {
     private static final int EXCERPT_LENGTH = 300;
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
 
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final HttpClient httpClient = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_1_1)
+            .build();
 
     public List<NewsItem> fetch(String feedUrl, String sourceName) {
         try {
             // Java HttpClient로 직접 가져와 User-Agent 설정 (봇 차단 우회)
+            String referer = URI.create(feedUrl).getScheme() + "://" + URI.create(feedUrl).getHost();
+
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(feedUrl))
                     .header("User-Agent", USER_AGENT)
+                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                    .header("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7")
+                    .header("Accept-Encoding", "identity")
+                    .header("Referer", referer)
                     .GET()
                     .build();
 

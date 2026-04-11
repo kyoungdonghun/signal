@@ -24,30 +24,53 @@ public class PipelineService {
     private final TechnicalIndicatorCalculator technicalIndicatorCalculator;
     private final RssFeedClient rssFeedClient;
     private final NtService ntService;
+    private final TrService trService;
+    private final CaService caService;
+    private final IsService isService;
+    private final IaService iaService;
+    private final IpService ipService;
 
     public PipelineService(YahooFinanceClient yahooFinanceClient,
                            TechnicalIndicatorCalculator technicalIndicatorCalculator,
                            RssFeedClient rssFeedClient,
-                           NtService ntService) {
+                           NtService ntService,
+                           TrService trService,
+                           CaService caService,
+                           IsService isService,
+                           IaService iaService,
+                           IpService ipService) {
         this.yahooFinanceClient = yahooFinanceClient;
         this.technicalIndicatorCalculator = technicalIndicatorCalculator;
         this.rssFeedClient = rssFeedClient;
         this.ntService = ntService;
+        this.trService = trService;
+        this.caService = caService;
+        this.isService = isService;
+        this.iaService = iaService;
+        this.ipService = ipService;
     }
 
     public PipelineResult run(String ticker, String rssFeedUrl, String rssFeedSource) {
         String runId = generateRunId(ticker, rssFeedUrl);
 
-        // TA Pipeline: TC
+        // TA Pipeline: TC → TR
         OhlcvData ohlcvData = yahooFinanceClient.fetch(ticker);
         TechnicalIndicatorResult technical = technicalIndicatorCalculator.calculate(runId, ohlcvData);
+        TrService.TrResult trResult = trService.detect(runId, technical);
 
         // NI Pipeline: NC → NT (NF 생략 — Phase 1 단순화)
         List<NewsItem> news = rssFeedClient.fetch(rssFeedUrl, rssFeedSource);
         List<NewsItem> limitedNews = news.stream().limit(newsMaxItems).toList();
         List<NtService.NtResult> taggedNews = ntService.tagBatch(runId, limitedNews, ticker);
 
-        return new PipelineResult(runId, ticker, Instant.now().toString(), technical, taggedNews);
+        // IB Pipeline: CA → IS → IA → IP
+        CaService.CaResult caResult = caService.aggregate(runId, ticker, taggedNews, trResult);
+        IsService.IsResult isResult = isService.summarize(runId, ticker, caResult, taggedNews);
+        IaService.IaResult iaResult = iaService.aggregate(runId, List.of(isResult));
+        IpService.IpResult ipResult = ipService.present(runId, isResult, iaResult);
+
+        return new PipelineResult(runId, ticker, Instant.now().toString(),
+                technical, trResult, taggedNews, caResult, isResult, iaResult, ipResult);
     }
 
     // run_id: ticker + feedUrl + 현재 날짜(일 단위) 해시
@@ -68,6 +91,11 @@ public class PipelineService {
             String ticker,
             String executedAt,
             TechnicalIndicatorResult technical,
-            List<NtService.NtResult> taggedNews
+            TrService.TrResult tr,
+            List<NtService.NtResult> taggedNews,
+            CaService.CaResult ca,
+            IsService.IsResult is,
+            IaService.IaResult ia,
+            IpService.IpResult ip
     ) {}
 }
