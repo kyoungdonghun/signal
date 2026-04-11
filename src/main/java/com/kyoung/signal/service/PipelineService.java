@@ -59,9 +59,10 @@ public class PipelineService {
     public PipelineResult run(String ticker, String rssFeedUrl, String rssFeedSource) {
         String runId = generateRunId(ticker, rssFeedUrl);
 
-        // 같은 날 동일 run_id가 이미 저장돼 있으면 스킵 (중복 방지)
-        if (pipelineRunRepository.existsByRunId(runId)) {
-            throw new RuntimeException("이미 오늘 실행된 run입니다: runId=" + runId);
+        // 같은 날 동일 run_id가 이미 저장돼 있으면 저장 스킵 (재실행은 허용)
+        boolean alreadySaved = pipelineRunRepository.existsByRunId(runId);
+        if (alreadySaved) {
+            System.out.println("[PipelineService] 이미 저장된 run_id — 재실행하되 저장 스킵: " + runId);
         }
 
         // TA Pipeline: TC → TR
@@ -83,8 +84,10 @@ public class PipelineService {
         PipelineResult result = new PipelineResult(runId, ticker, Instant.now().toString(),
                 technical, trResult, taggedNews, caResult, isResult, iaResult, ipResult);
 
-        // DB 저장
-        save(result, technical);
+        // DB 저장 (중복 run_id는 스킵)
+        if (!alreadySaved) {
+            save(result, technical);
+        }
 
         return result;
     }

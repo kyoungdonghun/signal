@@ -23,6 +23,12 @@ public class YahooFinanceClient {
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    public double fetchCurrentPrice(String ticker) {
+        OhlcvData data = fetch(ticker);
+        List<OhlcvData.Bar> bars = data.getBars();
+        return bars.get(bars.size() - 1).getClose();
+    }
+
     public OhlcvData fetch(String ticker) {
         String url = String.format(BASE_URL, ticker);
 

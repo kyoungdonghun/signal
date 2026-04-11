@@ -44,6 +44,8 @@ public class OutcomeRecordEntity {
         return e;
     }
 
-    public Long getId()    { return id; }
-    public String getRunId() { return runId; }
+    public Long getId()              { return id; }
+    public String getRunId()         { return runId; }
+    public Double getPrice1wAfter()  { return price1wAfter; }
+    public void setPrice1wAfter(Double v) { this.price1wAfter = v; }
 }

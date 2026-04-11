@@ -14,11 +14,14 @@ import java.util.List;
 public class PipelineScheduler {
 
     private final PipelineService pipelineService;
+    private final OutcomeService outcomeService;
     private final WatchlistProperties watchlistProperties;
 
     public PipelineScheduler(PipelineService pipelineService,
+                              OutcomeService outcomeService,
                               WatchlistProperties watchlistProperties) {
         this.pipelineService = pipelineService;
+        this.outcomeService = outcomeService;
         this.watchlistProperties = watchlistProperties;
     }
 
@@ -26,6 +29,14 @@ public class PipelineScheduler {
     public void runScheduled() {
         System.out.println("[Scheduler] 파이프라인 스케줄 실행 시작");
 
+        // 1. 과거 run outcome 채움 (1d / 1w)
+        try {
+            outcomeService.fillOutcomes();
+        } catch (Exception e) {
+            System.err.println("[Scheduler] outcome 채움 실패: " + e.getMessage());
+        }
+
+        // 2. 오늘 파이프라인 실행
         for (WatchlistItem item : watchlistProperties.getWatchlist()) {
             try {
                 System.out.println("[Scheduler] 실행 중: " + item.getTicker());

@@ -75,8 +75,10 @@ public class PipelineRunEntity {
         return e;
     }
 
-    public Long getId()           { return id; }
-    public String getRunId()      { return runId; }
-    public String getTicker()     { return ticker; }
-    public String getCrossResult(){ return crossResult; }
+    public Long getId()                  { return id; }
+    public String getRunId()             { return runId; }
+    public String getTicker()            { return ticker; }
+    public LocalDateTime getExecutedAt() { return executedAt; }
+    public String getCrossResult()       { return crossResult; }
+    public Double getPrice()             { return price; }
 }
