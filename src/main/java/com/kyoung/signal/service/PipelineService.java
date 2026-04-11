@@ -1,16 +1,18 @@
 package com.kyoung.signal.service;
 
-import com.kyoung.signal.domain.NewsItem;
-import com.kyoung.signal.domain.OhlcvData;
-import com.kyoung.signal.domain.TechnicalIndicatorResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kyoung.signal.domain.*;
 import com.kyoung.signal.infrastructure.rss.RssFeedClient;
 import com.kyoung.signal.infrastructure.yahoo.YahooFinanceClient;
+import com.kyoung.signal.repository.PipelineRunRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.HexFormat;
 import java.util.List;
 
@@ -29,6 +31,8 @@ public class PipelineService {
     private final IsService isService;
     private final IaService iaService;
     private final IpService ipService;
+    private final PipelineRunRepository pipelineRunRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public PipelineService(YahooFinanceClient yahooFinanceClient,
                            TechnicalIndicatorCalculator technicalIndicatorCalculator,
@@ -38,7 +42,8 @@ public class PipelineService {
                            CaService caService,
                            IsService isService,
                            IaService iaService,
-                           IpService ipService) {
+                           IpService ipService,
+                           PipelineRunRepository pipelineRunRepository) {
         this.yahooFinanceClient = yahooFinanceClient;
         this.technicalIndicatorCalculator = technicalIndicatorCalculator;
         this.rssFeedClient = rssFeedClient;
@@ -48,10 +53,16 @@ public class PipelineService {
         this.isService = isService;
         this.iaService = iaService;
         this.ipService = ipService;
+        this.pipelineRunRepository = pipelineRunRepository;
     }
 
     public PipelineResult run(String ticker, String rssFeedUrl, String rssFeedSource) {
         String runId = generateRunId(ticker, rssFeedUrl);
+
+        // 같은 날 동일 run_id가 이미 저장돼 있으면 스킵 (중복 방지)
+        if (pipelineRunRepository.existsByRunId(runId)) {
+            throw new RuntimeException("이미 오늘 실행된 run입니다: runId=" + runId);
+        }
 
         // TA Pipeline: TC → TR
         OhlcvData ohlcvData = yahooFinanceClient.fetch(ticker);
@@ -69,8 +80,40 @@ public class PipelineService {
         IaService.IaResult iaResult = iaService.aggregate(runId, List.of(isResult));
         IpService.IpResult ipResult = ipService.present(runId, isResult, iaResult);
 
-        return new PipelineResult(runId, ticker, Instant.now().toString(),
+        PipelineResult result = new PipelineResult(runId, ticker, Instant.now().toString(),
                 technical, trResult, taggedNews, caResult, isResult, iaResult, ipResult);
+
+        // DB 저장
+        save(result, technical);
+
+        return result;
+    }
+
+    private void save(PipelineResult result, TechnicalIndicatorResult technical) {
+        try {
+            String fullJson = objectMapper.writeValueAsString(result);
+
+            PipelineRunEntity entity = PipelineRunEntity.of(
+                    result.runId(),
+                    result.ticker(),
+                    LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC),
+                    result.tr().stability(),
+                    result.tr().confidence(),
+                    result.ca().crossResult(),
+                    result.ca().confidence(),
+                    technical.getPrice() != null ? technical.getPrice().getCurrent() : null,
+                    technical.getPrice() != null ? technical.getPrice().getMa20() : null,
+                    technical.getPrice() != null ? technical.getPrice().getMa60() : null,
+                    technical.getRsi() != null ? technical.getRsi().getValue() : null,
+                    technical.getVolume() != null ? technical.getVolume().getRatio() : null,
+                    fullJson
+            );
+
+            pipelineRunRepository.save(entity);
+        } catch (Exception e) {
+            // 저장 실패는 파이프라인 결과에 영향 주지 않음 — 로그만
+            System.err.println("[PipelineService] DB 저장 실패: " + e.getMessage());
+        }
     }
 
     // run_id: ticker + feedUrl + 현재 날짜(일 단위) 해시
