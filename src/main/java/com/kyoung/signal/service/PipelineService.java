@@ -5,6 +5,7 @@ import com.kyoung.signal.domain.OhlcvData;
 import com.kyoung.signal.domain.TechnicalIndicatorResult;
 import com.kyoung.signal.infrastructure.rss.RssFeedClient;
 import com.kyoung.signal.infrastructure.yahoo.YahooFinanceClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -15,6 +16,9 @@ import java.util.List;
 
 @Service
 public class PipelineService {
+
+    @Value("${pipeline.news.max-items:50}")
+    private int newsMaxItems;
 
     private final YahooFinanceClient yahooFinanceClient;
     private final TechnicalIndicatorCalculator technicalIndicatorCalculator;
@@ -40,7 +44,8 @@ public class PipelineService {
 
         // NI Pipeline: NC → NT (NF 생략 — Phase 1 단순화)
         List<NewsItem> news = rssFeedClient.fetch(rssFeedUrl, rssFeedSource);
-        List<NtService.NtResult> taggedNews = ntService.tagBatch(runId, news, ticker);
+        List<NewsItem> limitedNews = news.stream().limit(newsMaxItems).toList();
+        List<NtService.NtResult> taggedNews = ntService.tagBatch(runId, limitedNews, ticker);
 
         return new PipelineResult(runId, ticker, Instant.now().toString(), technical, taggedNews);
     }
