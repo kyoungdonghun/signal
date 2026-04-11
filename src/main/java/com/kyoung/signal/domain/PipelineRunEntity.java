@@ -1,0 +1,82 @@
+package com.kyoung.signal.domain;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "pipeline_runs")
+public class PipelineRunEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "run_id", nullable = false, unique = true, length = 16)
+    private String runId;
+
+    @Column(name = "ticker", nullable = false, length = 20)
+    private String ticker;
+
+    @Column(name = "executed_at", nullable = false)
+    private LocalDateTime executedAt;
+
+    @Column(name = "stability", length = 10)
+    private String stability;
+
+    @Column(name = "tr_confidence", length = 10)
+    private String trConfidence;
+
+    @Column(name = "cross_result", length = 20)
+    private String crossResult;
+
+    @Column(name = "ca_confidence", length = 10)
+    private String caConfidence;
+
+    @Column(name = "price")
+    private Double price;
+
+    @Column(name = "ma20")
+    private Double ma20;
+
+    @Column(name = "ma60")
+    private Double ma60;
+
+    @Column(name = "rsi")
+    private Double rsi;
+
+    @Column(name = "volume_ratio")
+    private Double volumeRatio;
+
+    @Column(name = "full_result", columnDefinition = "JSON")
+    private String fullResult;
+
+    protected PipelineRunEntity() {}
+
+    public static PipelineRunEntity of(String runId, String ticker, LocalDateTime executedAt,
+                                       String stability, String trConfidence,
+                                       String crossResult, String caConfidence,
+                                       Double price, Double ma20, Double ma60,
+                                       Double rsi, Double volumeRatio,
+                                       String fullResult) {
+        PipelineRunEntity e = new PipelineRunEntity();
+        e.runId = runId;
+        e.ticker = ticker;
+        e.executedAt = executedAt;
+        e.stability = stability;
+        e.trConfidence = trConfidence;
+        e.crossResult = crossResult;
+        e.caConfidence = caConfidence;
+        e.price = price;
+        e.ma20 = ma20;
+        e.ma60 = ma60;
+        e.rsi = rsi;
+        e.volumeRatio = volumeRatio;
+        e.fullResult = fullResult;
+        return e;
+    }
+
+    public Long getId()           { return id; }
+    public String getRunId()      { return runId; }
+    public String getTicker()     { return ticker; }
+    public String getCrossResult(){ return crossResult; }
+}
