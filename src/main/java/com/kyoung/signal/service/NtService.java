@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kyoung.signal.domain.NewsItem;
 import com.kyoung.signal.infrastructure.claude.ClaudeApiClient;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -65,7 +66,7 @@ public class NtService {
     private final ClaudeApiClient claudeApiClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public NtService(ClaudeApiClient claudeApiClient) {
+    public NtService(@Qualifier("sonnetClient") ClaudeApiClient claudeApiClient) {
         this.claudeApiClient = claudeApiClient;
     }
 

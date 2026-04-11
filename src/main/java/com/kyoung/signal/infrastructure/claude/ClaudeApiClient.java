@@ -4,30 +4,27 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-@Component
 public class ClaudeApiClient {
 
     private static final String ANTHROPIC_VERSION = "2023-06-01";
 
-    @Value("${claude.api.key}")
-    private String apiKey;
-
-    @Value("${claude.api.model}")
-    private String model;
-
-    @Value("${claude.api.url:https://api.anthropic.com/v1/messages}")
-    private String apiUrl;
+    private final String apiKey;
+    private final String model;
+    private final String apiUrl;
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public ClaudeApiClient(String apiKey, String model, String apiUrl) {
+        this.apiKey = apiKey;
+        this.model = model;
+        this.apiUrl = apiUrl;
+    }
 
     public String call(String systemPrompt, String userMessage) {
         try {

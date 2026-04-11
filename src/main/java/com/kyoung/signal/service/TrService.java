@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kyoung.signal.domain.TechnicalIndicatorResult;
 import com.kyoung.signal.infrastructure.claude.ClaudeApiClient;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -54,7 +55,7 @@ public class TrService {
     private final ClaudeApiClient claudeApiClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public TrService(ClaudeApiClient claudeApiClient) {
+    public TrService(@Qualifier("opusClient") ClaudeApiClient claudeApiClient) {
         this.claudeApiClient = claudeApiClient;
     }
 
