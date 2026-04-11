@@ -38,3 +38,8 @@ out/
 
 ### Claude Code ###
 .claude/settings.local.json
+
+### Environment / Secrets ###
+.env
+.env.local
+*.env
