@@ -1,0 +1,113 @@
+{
+  "triggers": [
+    {
+      "category": "Security Policy",
+      "regex": "password|비밀번호|security|보안|secret|시크릿|token|토큰|key|키|api.?key|reset|초기화|credential|인증",
+      "load": [
+        "docs/policies/security-policy.md"
+      ]
+    },
+    {
+      "category": "Database Standards",
+      "regex": "database|데이터베이스|schema|스키마|db|sql|migration|마이그레이션|jpa|entity|엔티티",
+      "load": [
+        "docs/standards/development-standards.md"
+      ]
+    },
+    {
+      "category": "Versioning & Deployment",
+      "regex": "deploy|배포|production|프로덕션|release|릴리스|version|버전|gradle|빌드|build",
+      "load": [
+        "docs/policies/versioning-policy.md"
+      ]
+    },
+    {
+      "category": "Documentation Standards",
+      "regex": "prd|spec|document|문서|write|작성|template|템플릿|req|요구사항",
+      "load": [
+        "docs/standards/documentation-standards.md"
+      ]
+    },
+    {
+      "category": "Agent Workflow (REQ/WI Loop)",
+      "regex": "REQ|요구사항|requirement|WI|work\\s*item|작업\\s*항목|workflow|워크플로우|handoff|핸드오프",
+      "load": [
+        "docs/guides/development-workflow.md",
+        "docs/standards/glossary.md",
+        "docs/guides/traceability.md"
+      ]
+    },
+    {
+      "category": "Agent System (Build/Runtime)",
+      "regex": "subagent|서브에이전트|skills?|스킬|docops|routing|라우팅|build.?layer|runtime.?layer|에이전트",
+      "load": [
+        "docs/architecture/system-design.md",
+        "docs/guides/agent-docs-map.md"
+      ]
+    },
+    {
+      "category": "Execution / HITL Policy",
+      "regex": "execute|실행|command|명령|approval|승인|HITL|tool|권한",
+      "load": [
+        "docs/policies/execution-policy.md"
+      ]
+    },
+    {
+      "category": "Market Data Pipeline",
+      "regex": "yahoo|yfinance|ohlcv|시가|고가|저가|종가|거래량|price|가격|market.?data|시장데이터|주가",
+      "load": [
+        "docs/standards/development-standards.md",
+        ".claude/agents/runtime/tc.md"
+      ]
+    },
+    {
+      "category": "News Pipeline (NI)",
+      "regex": "rss|뉴스|news|feed|수집|collect|reuters|bloomberg|연합|한국경제|공시|dart|edgar",
+      "load": [
+        ".claude/agents/runtime/nc.md",
+        ".claude/agents/runtime/nf.md",
+        ".claude/agents/runtime/nt.md"
+      ]
+    },
+    {
+      "category": "Technical Analysis (TA)",
+      "regex": "ma|이동평균|moving.?average|rsi|거래량|volume|기술적.?분석|technical.?analysis|지표|indicator|과매수|과매도",
+      "load": [
+        ".claude/agents/runtime/tc.md",
+        ".claude/agents/runtime/tr.md"
+      ]
+    },
+    {
+      "category": "Cross Validation & Briefing (CA/IB)",
+      "regex": "교차|cross|충돌|conflict|일치|aligned|브리핑|briefing|요약|summary|ca|aggregat",
+      "load": [
+        ".claude/agents/runtime/ca.md",
+        ".claude/agents/runtime/is.md",
+        ".claude/agents/runtime/ia.md",
+        ".claude/agents/runtime/ip.md"
+      ]
+    },
+    {
+      "category": "Claude API Integration",
+      "regex": "claude.?api|sentiment|감성.?분석|ai.?분석|system.?prompt|프롬프트|llm|태깅|tagging",
+      "load": [
+        ".claude/agents/runtime/nt.md",
+        ".claude/agents/runtime/is.md"
+      ]
+    },
+    {
+      "category": "Pipeline Full Flow",
+      "regex": "파이프라인|pipeline|전체.?흐름|full.?flow|phase.?1|phase1|nc.*ip|ni.*ib",
+      "load": [
+        ".claude/config/PIPELINE.md"
+      ]
+    },
+    {
+      "category": "Future Enhancement",
+      "regex": "고도화|enhancement|phase.?[234]|after.?source|지식.?그래프|knowledge.?graph|백테스팅|backtesting|포트폴리오|portfolio",
+      "load": [
+        ".claude/config/afterSource.md"
+      ]
+    }
+  ]
+}

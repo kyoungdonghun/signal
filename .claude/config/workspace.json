@@ -1,0 +1,119 @@
+{
+  "version": "1.0",
+  "workspace_root": ".",
+  "meta_framework": {
+    "name": "signal-agentic-team",
+    "tag": "SIGNAL",
+    "role": "SIGNAL project orchestration",
+    "agents": {
+      "build": [
+        "ps",
+        "eo",
+        "sa",
+        "se",
+        "re",
+        "pg",
+        "tr",
+        "uv",
+        "docops",
+        "qa",
+        "cr"
+      ],
+      "runtime": [
+        "nc",
+        "nf",
+        "nt",
+        "tc",
+        "tr",
+        "ca",
+        "is",
+        "ia",
+        "ip"
+      ]
+    },
+    "skills": [
+      "create-req",
+      "create-wi-handoff-packet",
+      "create-wi-evidence-pack",
+      "lint",
+      "validate-docs",
+      "typecheck",
+      "test",
+      "test-coverage",
+      "build-check",
+      "create-agent",
+      "sync-docs-index",
+      "react-best-practices",
+      "yahoo-finance-fetch",
+      "rss-feed-fetch",
+      "technical-indicator-calc",
+      "claude-api-call"
+    ]
+  },
+  "domain_projects": [
+    {
+      "project_id": "PRJ-SIGNAL-001",
+      "tag": "SIGNAL",
+      "name": "signal",
+      "display_name": "SIGNAL - AI Market Intelligence",
+      "path": ".",
+      "routing_triggers": [
+        "signal",
+        "stock",
+        "market",
+        "주식",
+        "뉴스",
+        "news",
+        "기술적분석",
+        "technical",
+        "analyst",
+        "아날리스트",
+        "pipeline",
+        "파이프라인"
+      ],
+      "custom_agents": [
+        "nc",
+        "nf",
+        "nt",
+        "tc",
+        "tr",
+        "ca",
+        "is",
+        "ia",
+        "ip"
+      ],
+      "custom_skills": [
+        "yahoo-finance-fetch",
+        "rss-feed-fetch",
+        "technical-indicator-calc",
+        "claude-api-call"
+      ],
+      "tech_stack": [
+        "java",
+        "spring-boot",
+        "mysql",
+        "react"
+      ],
+      "target_markets": [
+        "US",
+        "KR"
+      ],
+      "status": "active",
+      "current_phase": "phase-1",
+      "phase_status": {
+        "phase-1": "in-progress",
+        "phase-2": "pending",
+        "phase-3": "pending",
+        "phase-4": "pending"
+      }
+    }
+  ],
+  "routing_config": {
+    "default_project": "PRJ-SIGNAL-001",
+    "keyword_matching": true,
+    "agent_layer_routing": {
+      "build_keywords": ["구현", "implement", "코드", "code", "리뷰", "review", "테스트", "test", "배포", "deploy"],
+      "runtime_keywords": ["뉴스수집", "news collect", "기술지표", "technical indicator", "감성분석", "sentiment", "브리핑", "briefing"]
+    }
+  }
+}
