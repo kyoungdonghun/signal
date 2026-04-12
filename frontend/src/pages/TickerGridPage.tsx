@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
+import type { SchedulerLog } from '../api/client';
 import { StatusBadge } from '../components/StatusBadge';
 import type { RunSummary } from '../types';
 import styles from './TickerGridPage.module.css';
@@ -40,16 +41,39 @@ function isToday(iso: string): boolean {
   return new Date(iso).toLocaleDateString('ko-KR') === new Date().toLocaleDateString('ko-KR');
 }
 
+const PHASE_TARGET = 100;
+
+// 마지막 scheduler 실행이 평일 기준 1일 이상 지났는지 확인
+function detectGap(logs: SchedulerLog[]): string | null {
+  const successful = logs.filter(l => l.status === 'SUCCESS' || l.status === 'PARTIAL');
+  if (successful.length === 0) return null;
+  const lastRun = new Date(successful[0].startedAt);
+  const now = new Date();
+  const diffMs = now.getTime() - lastRun.getTime();
+  const diffDays = diffMs / (1000 * 60 * 60 * 24);
+  if (diffDays >= 2) {
+    return `마지막 실행: ${lastRun.toLocaleDateString('ko-KR')} — ${Math.floor(diffDays)}일 경과`;
+  }
+  return null;
+}
+
 export function TickerGridPage() {
   const navigate = useNavigate();
   const [runs, setRuns] = useState<RunSummary[]>([]);
   const [committed, setCommitted] = useState<Record<string, boolean>>({});
+  const [totalRuns, setTotalRuns] = useState<number | null>(null);
+  const [gapWarning, setGapWarning] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.getLatestRuns()
-      .then(async data => {
+    Promise.all([
+      api.getLatestRuns(),
+      api.getRunStats(),
+      api.getSchedulerLogs(),
+    ]).then(async ([data, stats, logs]) => {
         setRuns(data);
+        setTotalRuns(stats.totalRuns);
+        setGapWarning(detectGap(logs));
         const entries = await Promise.all(
           data.map(async r => {
             try {
@@ -78,12 +102,31 @@ export function TickerGridPage() {
     year: 'numeric', month: 'long', day: 'numeric', weekday: 'long',
   });
 
+  const pct = totalRuns != null ? Math.min((totalRuns / PHASE_TARGET) * 100, 100) : null;
+
   return (
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.heading}>시장 현황</h1>
         <p className={styles.subheading}>{today}</p>
       </div>
+
+      {gapWarning && (
+        <div className={styles.gapWarning}>
+          ⚠ 서버 가동 간격 감지 — {gapWarning}
+        </div>
+      )}
+
+      {pct != null && (
+        <div className={styles.progressWrap}>
+          <div className={styles.progressLabel}>
+            Phase 1.5 진입 조건: <strong>{totalRuns}</strong> / {PHASE_TARGET}건
+          </div>
+          <div className={styles.progressBar}>
+            <div className={styles.progressFill} style={{ width: `${pct}%` }} />
+          </div>
+        </div>
+      )}
 
       <div className={styles.grid}>
         {runs.map(run => {

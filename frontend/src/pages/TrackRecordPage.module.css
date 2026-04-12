@@ -55,6 +55,20 @@
 .changeNeg { color: var(--color-bearish); font-weight: 600; }
 .changeDash { color: var(--color-text-muted); }
 
+.userCommit { }
+
+.userCommitBadge {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--color-accent-light);
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.noCommit { color: var(--color-text-muted); }
+
 .loading, .empty {
   text-align: center;
   padding: var(--space-12);

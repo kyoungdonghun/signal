@@ -35,7 +35,7 @@ export function RunDetailPage() {
   const detail = ip?.details?.[0];
   const relevantNews = (run.fullResult?.taggedNews ?? [])
     .filter(n => n.relevance === 'High' || n.relevance === 'Medium')
-    .sort((a, b) => (a.relevance === 'High' ? -1 : 1));
+    .sort((a, _b) => (a.relevance === 'High' ? -1 : 1));
 
   const name = TICKER_NAMES[run.ticker] ?? run.ticker;
 

@@ -44,13 +44,19 @@ public class RunController {
         return ResponseEntity.ok(runs.stream().map(this::toSummary).toList());
     }
 
-    // 전체 run 목록 (트랙레코드) — ticker 파라미터로 필터 가능
+    // 전체 run 목록 (트랙레코드) — ticker 파라미터로 필터 가능, watchlist 티커만 표시
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> getAll(
             @RequestParam(required = false) String ticker) {
+        Set<String> activeTickers = watchlistProperties.getWatchlist().stream()
+                .map(PipelineScheduler.WatchlistItem::getTicker)
+                .collect(Collectors.toSet());
+
         List<PipelineRunEntity> runs = ticker != null
                 ? pipelineRunRepository.findByTickerOrderByExecutedAtDesc(ticker)
-                : pipelineRunRepository.findTop50ByOrderByExecutedAtDesc();
+                        .stream().filter(r -> activeTickers.contains(r.getTicker())).toList()
+                : pipelineRunRepository.findTop50ByOrderByExecutedAtDesc()
+                        .stream().filter(r -> activeTickers.contains(r.getTicker())).toList();
         return ResponseEntity.ok(runs.stream().map(r -> {
             Map<String, Object> summary = toSummary(r);
             outcomeRecordRepository.findByRunId(r.getRunId()).ifPresent(o -> {
@@ -83,6 +89,18 @@ public class RunController {
                     return ResponseEntity.ok(detail);
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    // 통계 (100건 카운터용)
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getStats() {
+        Set<String> activeTickers = watchlistProperties.getWatchlist().stream()
+                .map(PipelineScheduler.WatchlistItem::getTicker)
+                .collect(Collectors.toSet());
+        long total = pipelineRunRepository.findAll().stream()
+                .filter(r -> activeTickers.contains(r.getTicker()))
+                .count();
+        return ResponseEntity.ok(Map.of("totalRuns", total));
     }
 
     private Map<String, Object> toSummary(PipelineRunEntity r) {

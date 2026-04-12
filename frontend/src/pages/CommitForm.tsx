@@ -39,6 +39,7 @@ export function CommitForm({ runId, ticker, aiCrossResult }: Props) {
   const [levelView, setLevelView] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     api.getUserCommits(runId)
@@ -52,6 +53,7 @@ export function CommitForm({ runId, ticker, aiCrossResult }: Props) {
   const handleSubmit = async () => {
     if (!selected) return;
     setSubmitting(true);
+    setSaveError(null);
     try {
       await api.saveUserCommit({
         runId,
@@ -64,6 +66,7 @@ export function CommitForm({ runId, ticker, aiCrossResult }: Props) {
       setSubmitted(true);
     } catch (e) {
       console.error(e);
+      setSaveError('저장에 실패했습니다. 서버 연결을 확인해주세요.');
     } finally {
       setSubmitting(false);
     }
@@ -153,6 +156,11 @@ export function CommitForm({ runId, ticker, aiCrossResult }: Props) {
         >
           {submitting ? '저장 중...' : 'Commit'}
         </button>
+        {saveError && (
+          <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-bearish)', margin: 0 }}>
+            {saveError}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -1,16 +1,30 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
+import type { UserCommit } from '../api/client';
 import { StatusBadge } from '../components/StatusBadge';
 import type { RunSummary } from '../types';
 import styles from './TrackRecordPage.module.css';
 
+const LABEL: Record<string, string> = {
+  ALIGNED_BULLISH: '강세',
+  ALIGNED_BEARISH: '약세',
+  CONFLICT: '충돌',
+  UNCERTAIN: '불확실',
+};
+
 export function TrackRecordPage() {
   const [runs, setRuns] = useState<RunSummary[]>([]);
+  const [commitMap, setCommitMap] = useState<Record<string, UserCommit>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.getAllRuns()
-      .then(setRuns)
+    Promise.all([api.getAllRuns(), api.getAllUserCommits()])
+      .then(([runsData, commits]) => {
+        setRuns(runsData);
+        const map: Record<string, UserCommit> = {};
+        commits.forEach(c => { map[c.runId] = c; });
+        setCommitMap(map);
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
@@ -33,7 +47,8 @@ export function TrackRecordPage() {
             <th>Ticker</th>
             <th>실행일</th>
             <th>기술적 상태</th>
-            <th>교차 판단</th>
+            <th>AI 판단</th>
+            <th>내 판단</th>
             <th className={styles.thRight}>현재가</th>
             <th className={styles.thRight}>RSI</th>
             <th className={styles.thRight}>1일 후 변화</th>
@@ -45,6 +60,7 @@ export function TrackRecordPage() {
             const changeClass = change == null
               ? styles.changeDash
               : change >= 0 ? styles.changePos : styles.changeNeg;
+            const userCommit = commitMap[run.runId];
 
             return (
               <tr key={run.runId}>
@@ -57,6 +73,12 @@ export function TrackRecordPage() {
                 </td>
                 <td>
                   <StatusBadge value={run.crossResult || 'UNCERTAIN'} />
+                </td>
+                <td className={styles.userCommit}>
+                  {userCommit
+                    ? <span className={styles.userCommitBadge}>{LABEL[userCommit.userCrossResult] ?? userCommit.userCrossResult}</span>
+                    : <span className={styles.noCommit}>—</span>
+                  }
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   {run.price?.toLocaleString()}

@@ -18,11 +18,34 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   return res.json();
 }
 
+export interface UserCommit {
+  runId: string;
+  ticker: string;
+  userCrossResult: string;
+  userNote: string;
+  userLevelView: string;
+  agreedWithAi: boolean;
+  committedAt: string;
+}
+
+export interface SchedulerLog {
+  id: number;
+  startedAt: string;
+  completedAt: string | null;
+  tickersAttempted: string;
+  tickersSucceeded: string | null;
+  tickersFailed: string | null;
+  status: string;
+}
+
 export const api = {
   getLatestRuns: () => get<RunSummary[]>('/runs/latest'),
   getAllRuns: () => get<RunSummary[]>('/runs'),
   getRunsByTicker: (ticker: string) => get<RunSummary[]>(`/runs?ticker=${encodeURIComponent(ticker)}`),
   getRunDetail: (runId: string) => get<RunDetail>(`/runs/${runId}`),
+  getRunStats: () => get<{ totalRuns: number }>('/runs/stats'),
   saveUserCommit: (req: UserCommitRequest) => post('/user-commits', req),
-  getUserCommits: (runId: string) => get<{ userCrossResult: string; committedAt: string }[]>(`/user-commits/${runId}`),
+  getUserCommits: (runId: string) => get<UserCommit[]>(`/user-commits/${runId}`),
+  getAllUserCommits: () => get<UserCommit[]>('/user-commits'),
+  getSchedulerLogs: () => get<SchedulerLog[]>('/scheduler-logs'),
 };

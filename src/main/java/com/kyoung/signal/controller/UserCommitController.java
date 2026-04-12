@@ -41,6 +41,26 @@ public class UserCommitController {
         return ResponseEntity.ok(userCommitRepository.findByRunId(runId));
     }
 
+    // 전체 commit 목록 (트랙레코드 비교뷰 용)
+    @GetMapping
+    public ResponseEntity<List<Map<String, Object>>> getAll() {
+        return ResponseEntity.ok(
+                userCommitRepository.findAll().stream()
+                        .map(e -> {
+                            Map<String, Object> m = new java.util.LinkedHashMap<>();
+                            m.put("runId", e.getRunId());
+                            m.put("ticker", e.getTicker());
+                            m.put("userCrossResult", e.getUserCrossResult());
+                            m.put("userNote", e.getUserNote());
+                            m.put("userLevelView", e.getUserLevelView());
+                            m.put("agreedWithAi", e.getAgreedWithAi());
+                            m.put("committedAt", e.getCommittedAt() != null ? e.getCommittedAt() + "Z" : null);
+                            return m;
+                        })
+                        .toList()
+        );
+    }
+
     public record CommitRequest(
             String runId,
             String ticker,
