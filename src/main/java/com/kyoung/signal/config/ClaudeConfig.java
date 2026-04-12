@@ -20,15 +20,24 @@ public class ClaudeConfig {
     @Value("${claude.api.model.opus:claude-opus-4-6}")
     private String opusModel;
 
-    /** NC / NT / IP — 구조화된 출력, 배치 처리 */
+    @Value("${claude.api.model.haiku:claude-haiku-4-5-20251001}")
+    private String haikuModel;
+
+    /** NF / NtCompare 등 구조화된 출력, 배치 처리 */
     @Bean("sonnetClient")
     public ClaudeApiClient sonnetClient() {
         return new ClaudeApiClient(apiKey, sonnetModel, apiUrl);
     }
 
-    /** TR / CA / IS / IA — 실제 판단이 일어나는 레이어 */
+    /** CA — 핵심 교차 판단 레이어 */
     @Bean("opusClient")
     public ClaudeApiClient opusClient() {
         return new ClaudeApiClient(apiKey, opusModel, apiUrl);
+    }
+
+    /** NT — 분류 작업 전용 (Haiku 검증 후 NT 메인으로 전환 예정) */
+    @Bean("haikuClient")
+    public ClaudeApiClient haikuClient() {
+        return new ClaudeApiClient(apiKey, haikuModel, apiUrl);
     }
 }

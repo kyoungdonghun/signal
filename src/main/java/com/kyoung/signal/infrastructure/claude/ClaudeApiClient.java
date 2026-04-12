@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 public class ClaudeApiClient {
 
@@ -17,7 +18,9 @@ public class ClaudeApiClient {
     private final String model;
     private final String apiUrl;
 
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final HttpClient httpClient = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(30))
+            .build();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public ClaudeApiClient(String apiKey, String model, String apiUrl) {
@@ -35,10 +38,12 @@ public class ClaudeApiClient {
                     .header("Content-Type", "application/json")
                     .header("x-api-key", apiKey)
                     .header("anthropic-version", ANTHROPIC_VERSION)
+                    .timeout(Duration.ofSeconds(120))
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = httpClient.send(request,
+                    HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != 200) {
                 throw new RuntimeException("Claude API 오류: HTTP " + response.statusCode() + " — " + response.body());
@@ -57,6 +62,7 @@ public class ClaudeApiClient {
         ObjectNode body = objectMapper.createObjectNode();
         body.put("model", model);
         body.put("max_tokens", 8192);
+        body.put("temperature", 0.1);  // PIPELINE.md 요구: 재현성을 위해 낮게 고정
         body.put("system", systemPrompt);
 
         ArrayNode messages = body.putArray("messages");

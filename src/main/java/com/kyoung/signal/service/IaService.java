@@ -51,7 +51,7 @@ public class IaService {
     private final ClaudeApiClient claudeApiClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public IaService(@Qualifier("opusClient") ClaudeApiClient claudeApiClient) {
+    public IaService(@Qualifier("sonnetClient") ClaudeApiClient claudeApiClient) {
         this.claudeApiClient = claudeApiClient;
     }
 

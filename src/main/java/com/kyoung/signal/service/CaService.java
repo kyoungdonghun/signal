@@ -86,8 +86,17 @@ public class CaService {
         }
 
         sb.append("\n=== NT (News Tags) ===\n");
-        for (int i = 0; i < ntResults.size(); i++) {
-            NtService.NtResult n = ntResults.get(i);
+        List<NtService.NtResult> filtered = ntResults.stream()
+                .filter(n -> !("Low".equals(n.relevance()) && "Low".equals(n.importance())))
+                .toList();
+        int total = ntResults.size();
+        int passed = filtered.size();
+        int excluded = total - passed;
+        sb.append("(총 ").append(total).append("건 중 ").append(passed)
+          .append("건 전달 — Low+Low ").append(excluded).append("건 제외)\n\n");
+
+        for (int i = 0; i < filtered.size(); i++) {
+            NtService.NtResult n = filtered.get(i);
             sb.append("Item ").append(i).append(": ").append(n.title()).append("\n");
             sb.append("  relevance=").append(n.relevance())
               .append(", importance=").append(n.importance())

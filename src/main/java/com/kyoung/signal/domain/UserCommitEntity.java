@@ -29,11 +29,14 @@ public class UserCommitEntity {
     @Column(name = "agreed_with_ai")
     private Boolean agreedWithAi;
 
+    @Column(name = "user_level_view", columnDefinition = "TEXT")
+    private String userLevelView;
+
     protected UserCommitEntity() {}
 
     public static UserCommitEntity of(String runId, String ticker,
                                       String userCrossResult, String userNote,
-                                      Boolean agreedWithAi) {
+                                      Boolean agreedWithAi, String userLevelView) {
         UserCommitEntity e = new UserCommitEntity();
         e.runId = runId;
         e.ticker = ticker;
@@ -41,9 +44,16 @@ public class UserCommitEntity {
         e.userCrossResult = userCrossResult;
         e.userNote = userNote;
         e.agreedWithAi = agreedWithAi;
+        e.userLevelView = userLevelView;
         return e;
     }
 
-    public Long getId()    { return id; }
-    public String getRunId() { return runId; }
+    public Long getId()                { return id; }
+    public String getRunId()           { return runId; }
+    public String getTicker()          { return ticker; }
+    public String getCommittedAt()     { return committedAt != null ? committedAt.toString() : null; }
+    public String getUserCrossResult() { return userCrossResult; }
+    public String getUserNote()        { return userNote; }
+    public Boolean getAgreedWithAi()   { return agreedWithAi; }
+    public String getUserLevelView()   { return userLevelView; }
 }

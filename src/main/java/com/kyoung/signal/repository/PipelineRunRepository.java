@@ -24,6 +24,17 @@ public interface PipelineRunRepository extends JpaRepository<PipelineRunEntity, 
         @Param("to") LocalDateTime to
     );
 
+    // 1w outcome 채움 대상: 특정 시간 범위 실행 run 중 outcome은 있으나 price_1w_after가 null인 것
+    @Query("""
+        SELECT r FROM PipelineRunEntity r
+        WHERE r.executedAt BETWEEN :from AND :to
+        AND r.runId IN (SELECT o.runId FROM OutcomeRecordEntity o WHERE o.price1wAfter IS NULL)
+    """)
+    List<PipelineRunEntity> findRunsNeedingWeeklyOutcome(
+        @Param("from") LocalDateTime from,
+        @Param("to") LocalDateTime to
+    );
+
     // ticker별 최신 run 조회 (브리핑 페이지용)
     @Query("SELECT r FROM PipelineRunEntity r WHERE r.executedAt = (SELECT MAX(r2.executedAt) FROM PipelineRunEntity r2 WHERE r2.ticker = r.ticker)")
     List<PipelineRunEntity> findLatestPerTicker();

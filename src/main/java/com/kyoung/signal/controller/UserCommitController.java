@@ -25,7 +25,8 @@ public class UserCommitController {
                 request.ticker(),
                 request.userCrossResult(),
                 request.userNote(),
-                request.agreedWithAi()
+                request.agreedWithAi(),
+                request.userLevelView()
         );
         userCommitRepository.save(entity);
         return ResponseEntity.ok(Map.of(
@@ -45,6 +46,7 @@ public class UserCommitController {
             String ticker,
             String userCrossResult,
             String userNote,
-            Boolean agreedWithAi
+            Boolean agreedWithAi,
+            String userLevelView
     ) {}
 }

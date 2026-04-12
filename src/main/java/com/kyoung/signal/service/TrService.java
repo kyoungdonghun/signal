@@ -55,7 +55,7 @@ public class TrService {
     private final ClaudeApiClient claudeApiClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public TrService(@Qualifier("opusClient") ClaudeApiClient claudeApiClient) {
+    public TrService(@Qualifier("sonnetClient") ClaudeApiClient claudeApiClient) {
         this.claudeApiClient = claudeApiClient;
     }
 

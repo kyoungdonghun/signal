@@ -42,6 +42,9 @@ export function BriefingPage() {
         const ip = run.fullResult?.ip;
         const tr = run.fullResult?.tr;
         const detail = ip?.details?.[0];
+        const relevantNews = (run.fullResult?.taggedNews ?? [])
+          .filter(n => n.relevance === 'High' || n.relevance === 'Medium')
+          .sort((a, b) => (a.relevance === 'High' ? -1 : 1));
 
         return (
           <div key={run.runId} className={styles.card}>
@@ -108,13 +111,14 @@ export function BriefingPage() {
                   <div className={styles.sectionTitle}>종합 분석</div>
                   <p className={styles.bodyText}>{detail.summaryText}</p>
                 </div>
-                {detail.sourceUrls?.length > 0 && (
+                {relevantNews.length > 0 && (
                   <div className={styles.section}>
-                    <div className={styles.sectionTitle}>뉴스 출처</div>
+                    <div className={styles.sectionTitle}>분석에 사용된 뉴스</div>
                     <div className={styles.sourceList}>
-                      {detail.sourceUrls.map((url, i) => (
-                        <a key={i} href={url} target="_blank" rel="noreferrer" className={styles.sourceLink}>
-                          {url}
+                      {relevantNews.map((n, i) => (
+                        <a key={i} href={n.url} target="_blank" rel="noreferrer" className={styles.sourceLink}>
+                          <span className={styles.relevanceBadge}>{n.relevance}</span>
+                          {n.title}
                         </a>
                       ))}
                     </div>
@@ -129,7 +133,7 @@ export function BriefingPage() {
             )}
 
             {/* 사용자 commit */}
-            <CommitForm runId={run.runId} ticker={run.ticker} />
+            <CommitForm runId={run.runId} ticker={run.ticker} aiCrossResult={run.crossResult} />
           </div>
         );
       })}

@@ -42,7 +42,7 @@ public class IsService {
     private final ClaudeApiClient claudeApiClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public IsService(@Qualifier("opusClient") ClaudeApiClient claudeApiClient) {
+    public IsService(@Qualifier("sonnetClient") ClaudeApiClient claudeApiClient) {
         this.claudeApiClient = claudeApiClient;
     }
 
@@ -77,8 +77,10 @@ public class IsService {
             ca.conflictPoints().forEach(p -> sb.append("  - ").append(p.description()).append("\n"));
         }
 
-        sb.append("\n=== News URLs ===\n");
-        ntResults.forEach(n -> sb.append(n.url()).append("\n"));
+        sb.append("\n=== News URLs (High/Medium relevance only) ===\n");
+        ntResults.stream()
+                .filter(n -> !("Low".equals(n.relevance()) && "Low".equals(n.importance())))
+                .forEach(n -> sb.append(n.url()).append("\n"));
 
         return sb.toString();
     }

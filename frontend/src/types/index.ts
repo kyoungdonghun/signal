@@ -65,6 +65,14 @@ export interface CaOutput {
   reasoning: string;
 }
 
+export interface TaggedNewsItem {
+  title: string;
+  url: string;
+  sourceName: string;
+  relevance: 'High' | 'Medium' | 'Low' | null;
+  tone: string | null;
+}
+
 export interface FullResult {
   runId: string;
   ticker: string;
@@ -72,6 +80,7 @@ export interface FullResult {
   tr: TrOutput;
   ca: CaOutput;
   ip: IpOutput;
+  taggedNews?: TaggedNewsItem[];
 }
 
 export interface RunDetail extends RunSummary {
@@ -85,4 +94,5 @@ export interface UserCommitRequest {
   userCrossResult: CrossResult;
   userNote: string;
   agreedWithAi: boolean;
+  userLevelView?: string;
 }

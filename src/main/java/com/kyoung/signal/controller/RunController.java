@@ -75,7 +75,7 @@ public class RunController {
         return new java.util.LinkedHashMap<>(Map.of(
                 "runId", r.getRunId(),
                 "ticker", r.getTicker(),
-                "executedAt", r.getExecutedAt().toString(),
+                "executedAt", r.getExecutedAt().toString() + "Z",
                 "stability", r.getStability() != null ? r.getStability() : "",
                 "crossResult", r.getCrossResult() != null ? r.getCrossResult() : "",
                 "price", r.getPrice() != null ? r.getPrice() : 0.0,

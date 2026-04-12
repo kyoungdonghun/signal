@@ -76,10 +76,7 @@ public class OutcomeService {
 
         // 이미 outcome 레코드가 있는 run을 찾아 price_1w_after만 업데이트
         List<PipelineRunEntity> targets = pipelineRunRepository
-                .findAll()
-                .stream()
-                .filter(r -> r.getExecutedAt().isAfter(from) && r.getExecutedAt().isBefore(to))
-                .toList();
+                .findRunsNeedingWeeklyOutcome(from, to);
 
         for (PipelineRunEntity run : targets) {
             outcomeRecordRepository.findByRunId(run.getRunId()).ifPresent(outcome -> {

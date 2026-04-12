@@ -26,6 +26,7 @@ public class PipelineController {
     // 단일 종목 수동 실행
     @PostMapping("/run")
     public ResponseEntity<PipelineService.PipelineResult> run(@RequestBody RunRequest request) {
+        System.out.println("[PipelineController] 단일 종목 수동 실행 — ticker: " + request.ticker());
         PipelineService.PipelineResult result = pipelineService.run(
                 request.ticker(),
                 request.rssFeedUrl(),
@@ -37,9 +38,13 @@ public class PipelineController {
     // 스케줄러 전체 수동 트리거 (outcome 채움 + watchlist 전체 실행)
     @PostMapping("/scheduler/trigger")
     public ResponseEntity<Map<String, String>> triggerScheduler() {
+        System.out.println("[PipelineController] 수동 트리거 호출됨 — POST /api/pipeline/scheduler/trigger");
         pipelineScheduler.runScheduled();
         return ResponseEntity.ok(Map.of("status", "triggered"));
     }
+
+    // 단일 종목 수동 실행 로그
+    // run()은 위에서 처리
 
     public record RunRequest(String ticker, String rssFeedUrl, String rssFeedSource) {}
 }

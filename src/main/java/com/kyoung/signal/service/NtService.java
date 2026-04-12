@@ -66,24 +66,28 @@ public class NtService {
     private final ClaudeApiClient claudeApiClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public NtService(@Qualifier("sonnetClient") ClaudeApiClient claudeApiClient) {
+    public NtService(@Qualifier("haikuClient") ClaudeApiClient claudeApiClient) {
         this.claudeApiClient = claudeApiClient;
     }
 
     public List<NtResult> tagBatch(String runId, List<NewsItem> items, String ticker) {
+        return tagBatch(claudeApiClient, runId, items, ticker);
+    }
+
+    public List<NtResult> tagBatch(ClaudeApiClient client, String runId, List<NewsItem> items, String ticker) {
         List<NtResult> results = new ArrayList<>();
 
         for (int i = 0; i < items.size(); i += BATCH_SIZE) {
             List<NewsItem> chunk = items.subList(i, Math.min(i + BATCH_SIZE, items.size()));
-            results.addAll(processChunk(runId, chunk, ticker, i));
+            results.addAll(processChunk(client, runId, chunk, ticker, i));
         }
 
         return results;
     }
 
-    private List<NtResult> processChunk(String runId, List<NewsItem> chunk, String ticker, int offset) {
+    private List<NtResult> processChunk(ClaudeApiClient client, String runId, List<NewsItem> chunk, String ticker, int offset) {
         String userMessage = buildBatchMessage(chunk, ticker);
-        String rawResponse = claudeApiClient.call(SYSTEM_PROMPT, userMessage);
+        String rawResponse = client.call(SYSTEM_PROMPT, userMessage);
 
         try {
             return parseBatchResponse(runId, chunk, rawResponse, offset);
