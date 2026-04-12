@@ -1,0 +1,139 @@
+.page { display: flex; flex-direction: column; gap: var(--space-6); }
+
+.topBar { margin-bottom: calc(-1 * var(--space-2)); }
+
+.backBtn {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.backBtn:hover { color: var(--color-accent); }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.heading {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.tickerCode {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+  letter-spacing: 0.04em;
+}
+
+.latestBadges { display: flex; gap: var(--space-2); align-items: center; }
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  border-bottom: var(--border-width) solid var(--color-border);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.row:last-child { border-bottom: none; }
+.row:hover { background: var(--color-surface-hover); }
+
+.rowDate {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 70px;
+}
+
+.date {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.time {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.rowBadges { display: flex; gap: var(--space-2); flex: 1; }
+
+.rowMetrics {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 90px;
+}
+
+.price {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.rsi {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.rowRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 80px;
+  justify-content: flex-end;
+}
+
+.changePos { font-size: var(--font-size-sm); font-weight: 600; color: var(--color-bullish); }
+.changeNeg { font-size: var(--font-size-sm); font-weight: 600; color: var(--color-bearish); }
+.changeDash { font-size: var(--font-size-sm); color: var(--color-text-muted); }
+
+.commitBadge {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.commitDone {
+  color: var(--color-bullish);
+  background: var(--color-bullish-bg);
+}
+
+.commitNone {
+  color: var(--color-text-muted);
+  background: var(--color-border);
+}
+
+.loading, .empty {
+  text-align: center;
+  padding: var(--space-12);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}

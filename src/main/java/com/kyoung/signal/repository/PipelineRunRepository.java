@@ -41,4 +41,7 @@ public interface PipelineRunRepository extends JpaRepository<PipelineRunEntity, 
 
     // 최근 N개 run (트랙레코드용)
     List<PipelineRunEntity> findTop50ByOrderByExecutedAtDesc();
+
+    // 특정 ticker의 run 목록 (종목 히스토리용)
+    List<PipelineRunEntity> findByTickerOrderByExecutedAtDesc(String ticker);
 }

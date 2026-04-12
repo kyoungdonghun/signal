@@ -8,15 +8,6 @@ export function Layout() {
         <NavLink to="/" className={styles.logo}>SIGNAL</NavLink>
         <nav className={styles.nav}>
           <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              `${styles.navLink} ${isActive ? styles.active : ''}`
-            }
-          >
-            오늘의 브리핑
-          </NavLink>
-          <NavLink
             to="/track-record"
             className={({ isActive }) =>
               `${styles.navLink} ${isActive ? styles.active : ''}`

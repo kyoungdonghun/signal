@@ -44,10 +44,13 @@ public class RunController {
         return ResponseEntity.ok(runs.stream().map(this::toSummary).toList());
     }
 
-    // 전체 run 목록 (트랙레코드)
+    // 전체 run 목록 (트랙레코드) — ticker 파라미터로 필터 가능
     @GetMapping
-    public ResponseEntity<List<Map<String, Object>>> getAll() {
-        List<PipelineRunEntity> runs = pipelineRunRepository.findTop50ByOrderByExecutedAtDesc();
+    public ResponseEntity<List<Map<String, Object>>> getAll(
+            @RequestParam(required = false) String ticker) {
+        List<PipelineRunEntity> runs = ticker != null
+                ? pipelineRunRepository.findByTickerOrderByExecutedAtDesc(ticker)
+                : pipelineRunRepository.findTop50ByOrderByExecutedAtDesc();
         return ResponseEntity.ok(runs.stream().map(r -> {
             Map<String, Object> summary = toSummary(r);
             outcomeRecordRepository.findByRunId(r.getRunId()).ifPresent(o -> {
