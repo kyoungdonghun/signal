@@ -1,16 +1,17 @@
 package com.kyoung.signal.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kyoung.signal.domain.OutcomeRecordEntity;
 import com.kyoung.signal.domain.PipelineRunEntity;
 import com.kyoung.signal.repository.OutcomeRecordRepository;
 import com.kyoung.signal.repository.PipelineRunRepository;
+import com.kyoung.signal.service.PipelineScheduler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/runs")
@@ -18,18 +19,28 @@ public class RunController {
 
     private final PipelineRunRepository pipelineRunRepository;
     private final OutcomeRecordRepository outcomeRecordRepository;
+    private final PipelineScheduler.WatchlistProperties watchlistProperties;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public RunController(PipelineRunRepository pipelineRunRepository,
-                         OutcomeRecordRepository outcomeRecordRepository) {
+                         OutcomeRecordRepository outcomeRecordRepository,
+                         PipelineScheduler.WatchlistProperties watchlistProperties) {
         this.pipelineRunRepository = pipelineRunRepository;
         this.outcomeRecordRepository = outcomeRecordRepository;
+        this.watchlistProperties = watchlistProperties;
     }
 
-    // ticker별 최신 run 목록 (브리핑 페이지)
+    // ticker별 최신 run 목록 (브리핑 페이지) — 현재 watchlist 티커만 표시
     @GetMapping("/latest")
     public ResponseEntity<List<Map<String, Object>>> getLatest() {
-        List<PipelineRunEntity> runs = pipelineRunRepository.findLatestPerTicker();
+        Set<String> activeTickers = watchlistProperties.getWatchlist().stream()
+                .map(PipelineScheduler.WatchlistItem::getTicker)
+                .collect(Collectors.toSet());
+
+        List<PipelineRunEntity> runs = pipelineRunRepository.findLatestPerTicker()
+                .stream()
+                .filter(r -> activeTickers.contains(r.getTicker()))
+                .toList();
         return ResponseEntity.ok(runs.stream().map(this::toSummary).toList());
     }
 
