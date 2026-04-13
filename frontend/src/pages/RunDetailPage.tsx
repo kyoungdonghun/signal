@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/client';
-import { StatusBadge } from '../components/StatusBadge';
+import { StatusSummary } from '../components/StatusBadge';
 import { CommitForm } from './CommitForm';
 import type { RunDetail } from '../types';
 import styles from './BriefingPage.module.css';
@@ -56,10 +56,11 @@ export function RunDetailPage() {
       <div className={styles.card} style={{ marginTop: 0 }}>
         <div className={styles.cardHeader}>
           <span className={styles.ticker}>{name}</span>
-          <div className={styles.badges}>
-            <StatusBadge value={run.stability || 'unknown'} />
-            <StatusBadge value={run.crossResult || 'UNCERTAIN'} />
-          </div>
+          <StatusSummary
+            stability={run.stability || 'unknown'}
+            newsDirection={run.newsDirection || ''}
+            crossResult={run.crossResult || 'UNCERTAIN'}
+          />
         </div>
 
         <div className={styles.metaRow}>

@@ -8,6 +8,7 @@ export interface RunSummary {
   executedAt: string;
   stability: Stability | '';
   crossResult: CrossResult | '';
+  newsDirection: 'positive' | 'negative' | 'unclear' | '';
   price: number;
   rsi: number;
   price1dAfter?: number;

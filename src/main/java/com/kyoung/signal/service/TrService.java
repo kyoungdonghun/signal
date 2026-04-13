@@ -31,6 +31,13 @@ public class TrService {
 
             4. confidence — How reliable is this detection: "High" | "Medium" | "Low"
 
+            5. level_commit (optional) — Are there specific price levels that are verifiably significant?
+               If MA20, MA60, or price structure suggests a meaningful support or resistance level,
+               publicly commit that observation. This is NOT a trade signal.
+               "This analysis sees MA20 = X as short-term support" = allowed (verifiable observation).
+               "Buy at MA20" = forbidden (trade signal).
+               If no meaningful level exists, return an empty array [].
+
             ## Rules
             - Do NOT produce buy/sell signals or timing conclusions.
             - Do NOT translate instability into trade language.
@@ -48,6 +55,14 @@ public class TrService {
               "warnings": [
                 { "type": "<label>", "description": "<one sentence>" }
               ],
+              "level_commit": [
+                {
+                  "level": 183500.0,
+                  "type": "support | resistance",
+                  "basis": "MA20 | MA60 | price_action",
+                  "description": "<why this level is significant — verifiable, no trade directive>"
+                }
+              ],
               "reasoning": "<why this stability/confidence was committed, referencing specific values>"
             }
             """;
@@ -60,6 +75,12 @@ public class TrService {
     }
 
     public TrResult detect(String runId, TechnicalIndicatorResult technical) {
+        if (technical.getPrice() == null || technical.getRsi() == null || technical.getVolume() == null) {
+            return new TrResult(runId, technical.getTicker(), Instant.now().toString(),
+                    "unknown", "Low", List.of(), List.of(), List.of(),
+                    "TC 데이터 부족으로 TR 분석 불가: " + technical.getErrorDetail());
+        }
+
         String userMessage = buildMessage(technical);
         String rawResponse = claudeApiClient.call(SYSTEM_PROMPT, userMessage);
 
@@ -67,7 +88,7 @@ public class TrService {
             return parseResponse(runId, technical.getTicker(), rawResponse);
         } catch (Exception e) {
             return new TrResult(runId, technical.getTicker(), Instant.now().toString(),
-                    "unknown", "Low", List.of(), List.of(),
+                    "unknown", "Low", List.of(), List.of(), List.of(),
                     "parse error: " + e.getMessage());
         }
     }
@@ -114,6 +135,16 @@ public class TrService {
             warnings.add(new WarningItem(n.path("type").asText(), n.path("description").asText()));
         }
 
+        List<LevelCommitItem> levelCommits = new ArrayList<>();
+        for (JsonNode n : root.path("level_commit")) {
+            levelCommits.add(new LevelCommitItem(
+                    n.path("level").asDouble(0),
+                    n.path("type").asText(""),
+                    n.path("basis").asText(""),
+                    n.path("description").asText("")
+            ));
+        }
+
         return new TrResult(
                 runId,
                 ticker,
@@ -122,12 +153,14 @@ public class TrService {
                 root.path("confidence").asText("Low"),
                 conflicts,
                 warnings,
+                levelCommits,
                 root.path("reasoning").asText("")
         );
     }
 
     public record ConflictItem(String type, String description) {}
     public record WarningItem(String type, String description) {}
+    public record LevelCommitItem(double level, String type, String basis, String description) {}
 
     public record TrResult(
             String runId,
@@ -137,6 +170,7 @@ public class TrService {
             String confidence,
             List<ConflictItem> conflicts,
             List<WarningItem> warnings,
+            List<LevelCommitItem> levelCommits,
             String reasoning
     ) {}
 }

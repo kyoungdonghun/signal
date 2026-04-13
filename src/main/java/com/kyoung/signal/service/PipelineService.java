@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.HexFormat;
 import java.util.List;
 
@@ -95,20 +95,23 @@ public class PipelineService {
     private void save(PipelineResult result, TechnicalIndicatorResult technical) {
         try {
             String fullJson = objectMapper.writeValueAsString(result);
+            String levelCommitsJson = objectMapper.writeValueAsString(result.tr().levelCommits());
 
             PipelineRunEntity entity = PipelineRunEntity.of(
                     result.runId(),
                     result.ticker(),
-                    LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC),
+                    LocalDateTime.ofInstant(Instant.now(), ZoneId.of("Asia/Seoul")),
                     result.tr().stability(),
                     result.tr().confidence(),
                     result.ca().crossResult(),
+                    result.ca().newsDirection(),
                     result.ca().confidence(),
                     technical.getPrice() != null ? technical.getPrice().getCurrent() : null,
                     technical.getPrice() != null ? technical.getPrice().getMa20() : null,
                     technical.getPrice() != null ? technical.getPrice().getMa60() : null,
                     technical.getRsi() != null ? technical.getRsi().getValue() : null,
                     technical.getVolume() != null ? technical.getVolume().getRatio() : null,
+                    levelCommitsJson,
                     fullJson
             );
 

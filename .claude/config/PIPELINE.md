@@ -221,6 +221,14 @@ NF 출력 + 아래 추가
   "confidence": "High | Medium | Low",
   "conflicts": [],
   "warnings": [],
+  "level_commit": [
+    {
+      "level": 0,
+      "type": "support | resistance",
+      "basis": "MA20 | MA60 | price_action",
+      "description": "왜 이 레벨을 지지/저항으로 보는지 한 문장 (채점 가능한 언어로)"
+    }
+  ],
   "raw_values": {},
   "reasoning": "stability/confidence 결정의 종합 근거"
 }
@@ -233,7 +241,7 @@ NF 출력 + 아래 추가
   "ticker": "string",
   "aggregated_at": "ISO8601",
   "cross_result": "ALIGNED_BULLISH | ALIGNED_BEARISH | CONFLICT | UNCERTAIN",
-  "news_direction": "bullish | bearish | unclear",
+  "news_direction": "positive | negative | unclear",
   "technical_direction": "stable | unstable | unclear",
   "conflict_points": [],
   "confidence": "High | Medium | Low",

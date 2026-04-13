@@ -19,8 +19,8 @@ public class CaService {
             Your task: Cross-validate NT (news tags) and TR (technical state), then commit one of four states with reasoning.
 
             ## Cross-validation states
-            - ALIGNED_BULLISH — news and technical both point positive/stable
-            - ALIGNED_BEARISH — news and technical both point negative/unstable
+            - ALIGNED_BULLISH — news and technical both point positive/consistent
+            - ALIGNED_BEARISH — news and technical both point negative/inconsistent
             - CONFLICT — news and technical point in opposite directions
             - UNCERTAIN — one or both inputs are unclear, contradictory within themselves
 
@@ -35,7 +35,7 @@ public class CaService {
             ## Output format (strict JSON, no other text)
             {
               "cross_result": "ALIGNED_BULLISH | ALIGNED_BEARISH | CONFLICT | UNCERTAIN",
-              "news_direction": "bullish | bearish | unclear",
+              "news_direction": "positive | negative | unclear",
               "technical_direction": "stable | unstable | unclear",
               "conflict_points": [
                 { "source": "NT vs TR", "description": "<specific conflict>" }

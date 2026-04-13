@@ -16,3 +16,32 @@
 .stable          { background: var(--color-bullish-bg);  color: var(--color-stable); }
 .unstable        { background: var(--color-conflict-bg); color: var(--color-unstable); }
 .unknown         { background: var(--color-uncertain-bg);color: var(--color-uncertain); }
+
+/* StatusSummary — 3줄 상태 표시 */
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summaryRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.summaryLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  width: 4.5rem;
+  flex-shrink: 0;
+}
+
+.summaryValue {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.summaryResult .summaryValue {
+  font-weight: 700;
+}

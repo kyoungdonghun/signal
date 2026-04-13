@@ -104,14 +104,15 @@ public class RunController {
     }
 
     private Map<String, Object> toSummary(PipelineRunEntity r) {
-        return new java.util.LinkedHashMap<>(Map.of(
-                "runId", r.getRunId(),
-                "ticker", r.getTicker(),
-                "executedAt", r.getExecutedAt().toString() + "Z",
-                "stability", r.getStability() != null ? r.getStability() : "",
-                "crossResult", r.getCrossResult() != null ? r.getCrossResult() : "",
-                "price", r.getPrice() != null ? r.getPrice() : 0.0,
-                "rsi", r.getRsi() != null ? r.getRsi() : 0.0
-        ));
+        Map<String, Object> m = new java.util.LinkedHashMap<>();
+        m.put("runId", r.getRunId());
+        m.put("ticker", r.getTicker());
+        m.put("executedAt", r.getExecutedAt().toString());
+        m.put("stability", r.getStability() != null ? r.getStability() : "");
+        m.put("crossResult", r.getCrossResult() != null ? r.getCrossResult() : "");
+        m.put("newsDirection", r.getNewsDirection() != null ? r.getNewsDirection() : "");
+        m.put("price", r.getPrice() != null ? r.getPrice() : 0.0);
+        m.put("rsi", r.getRsi() != null ? r.getRsi() : 0.0);
+        return m;
     }
 }

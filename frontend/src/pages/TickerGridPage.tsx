@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
 import type { SchedulerLog } from '../api/client';
-import { StatusBadge } from '../components/StatusBadge';
+import { StatusSummary } from '../components/StatusBadge';
 import type { RunSummary } from '../types';
 import styles from './TickerGridPage.module.css';
 
@@ -154,10 +154,11 @@ export function TickerGridPage() {
                 {!hasToday && <span className={styles.staleTag}>오늘 데이터 없음</span>}
               </div>
 
-              <div className={styles.badges}>
-                <StatusBadge value={cr} />
-                <StatusBadge value={run.stability || 'unknown'} />
-              </div>
+              <StatusSummary
+                stability={run.stability || 'unknown'}
+                newsDirection={run.newsDirection || ''}
+                crossResult={cr}
+              />
 
               <div className={styles.metrics}>
                 <div className={styles.metric}>
