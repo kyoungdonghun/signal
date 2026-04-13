@@ -130,7 +130,7 @@ export function TrackRecordPage() {
       <div className={styles.driftPanel}>
         <div>
           <h2 className={styles.panelHeading}>최근 Calibration</h2>
-          <p className={styles.panelSubheading}>1주 후 가격 변화 기준으로 AI와 사용자 판단을 거칠게 비교한 bootstrap 계측입니다.</p>
+          <p className={styles.panelSubheading}>1일 후 가격 변화 기준으로 AI와 사용자 판단을 거칠게 비교한 bootstrap 계측입니다.</p>
         </div>
         <div className={styles.driftList}>
           {calibrationRows.slice(0, 6).map(row => (
@@ -164,7 +164,7 @@ export function TrackRecordPage() {
             <th>레벨 판정</th>
             <th className={styles.thRight}>현재가</th>
             <th className={styles.thRight}>RSI</th>
-            <th className={styles.thRight}>1주 변화</th>
+            <th className={styles.thRight}>1일 변화</th>
             <th className={styles.thRight}>1주 후</th>
           </tr>
         </thead>

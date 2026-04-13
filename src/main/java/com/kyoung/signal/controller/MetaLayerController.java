@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -66,7 +65,7 @@ public class MetaLayerController {
                             m.put("horizon", v.getHorizon());
                             m.put("verdict", v.getVerdict());
                             m.put("observedPrice", v.getObservedPrice());
-                            m.put("checkedAt", v.getCheckedAt() != null ? v.getCheckedAt().toString() + "Z" : null);
+                            m.put("checkedAt", v.getCheckedAt() != null ? v.getCheckedAt().toString() : null);
                             m.put("notes", v.getNotes() != null ? v.getNotes() : "");
                             return m;
                         })
@@ -76,12 +75,11 @@ public class MetaLayerController {
 
     @GetMapping("/track-record")
     public ResponseEntity<List<Map<String, Object>>> getTrackRecord() {
-        Set<String> activeTickers = watchlistProperties.getWatchlist().stream()
+        List<String> activeTickers = watchlistProperties.getWatchlist().stream()
                 .map(PipelineScheduler.WatchlistItem::getTicker)
-                .collect(Collectors.toSet());
+                .toList();
 
-        List<Map<String, Object>> rows = pipelineRunRepository.findTop50ByOrderByExecutedAtDesc().stream()
-                .filter(run -> activeTickers.contains(run.getTicker()))
+        List<Map<String, Object>> rows = pipelineRunRepository.findTop50ByTickerInOrderByExecutedAtDesc(activeTickers).stream()
                 .map(this::toTrackRecordRow)
                 .toList();
 
@@ -90,9 +88,9 @@ public class MetaLayerController {
 
     @GetMapping("/drift")
     public ResponseEntity<List<Map<String, Object>>> getDrift() {
-        Set<String> activeTickers = watchlistProperties.getWatchlist().stream()
+        List<String> activeTickers = watchlistProperties.getWatchlist().stream()
                 .map(PipelineScheduler.WatchlistItem::getTicker)
-                .collect(Collectors.toSet());
+                .toList();
 
         List<Map<String, Object>> rows = activeTickers.stream()
                 .map(this::toTickerDriftRow)
@@ -103,12 +101,11 @@ public class MetaLayerController {
 
     @GetMapping("/calibration")
     public ResponseEntity<List<Map<String, Object>>> getCalibration() {
-        Set<String> activeTickers = watchlistProperties.getWatchlist().stream()
+        List<String> activeTickers = watchlistProperties.getWatchlist().stream()
                 .map(PipelineScheduler.WatchlistItem::getTicker)
-                .collect(Collectors.toSet());
+                .toList();
 
-        List<Map<String, Object>> rows = pipelineRunRepository.findTop50ByOrderByExecutedAtDesc().stream()
-                .filter(run -> activeTickers.contains(run.getTicker()))
+        List<Map<String, Object>> rows = pipelineRunRepository.findTop50ByTickerInOrderByExecutedAtDesc(activeTickers).stream()
                 .map(run -> {
                     Map<String, Object> row = new LinkedHashMap<>();
                     row.put("runId", run.getRunId());
@@ -249,8 +246,8 @@ public class MetaLayerController {
         m.put("userNote", e.getUserNote());
         m.put("userLevelView", e.getUserLevelView());
         m.put("agreedWithAi", e.getAgreedWithAi());
-        m.put("committedAt", e.getCommittedAt() != null ? e.getCommittedAt() + "Z" : null);
-        m.put("updatedAt", e.getUpdatedAt() != null ? e.getUpdatedAt() + "Z" : null);
+        m.put("committedAt", e.getCommittedAt());
+        m.put("updatedAt", e.getUpdatedAt());
         return m;
     }
 

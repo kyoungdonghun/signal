@@ -44,6 +44,7 @@ Current interpretation:
 
 - anything already implemented before the 100-run threshold should be treated as bootstrap instrumentation
 - current verdict, drift, calibration, and reasoning checks are temporary observational rules, not final scoring doctrine
+- current calibration UI/API should be read as a 1-day bootstrap proxy, not a final 1-week scoring model
 
 ## Reference Questions From The Charter
 
@@ -180,8 +181,12 @@ Current limitation:
 
 - user commits are stored
 - AI commitments are stored
-- a bootstrap service now compares which side was more accurate under a coarse 1-week outcome assumption
+- a bootstrap service now compares which side was more accurate under a coarse 1-day outcome proxy
 - but calibration is not yet condition-aware or statistically meaningful
+
+Deferred follow-up:
+
+- add explicit 1-week calibration fields instead of reusing the current 1-day proxy
 
 ### 4. Reasoning Quality Verification Is Still Heuristic
 
@@ -212,6 +217,12 @@ Current direction:
 - Phase 1.5 now adopts `one commit per run` as the working policy
 - backend should upsert by `run_id`
 - hard DB uniqueness can be added after confirming existing data cleanup needs
+
+Deferred follow-up:
+
+- inspect existing duplicate `user_commits`
+- keep the latest row per `run_id`
+- then add a DB-level unique constraint on `run_id`
 
 ### 6. Run Summary API Is Too Thin For Phase 1.5
 

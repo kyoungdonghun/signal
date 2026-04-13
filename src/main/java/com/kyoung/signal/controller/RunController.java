@@ -48,15 +48,14 @@ public class RunController {
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> getAll(
             @RequestParam(required = false) String ticker) {
-        Set<String> activeTickers = watchlistProperties.getWatchlist().stream()
+        List<String> activeTickers = watchlistProperties.getWatchlist().stream()
                 .map(PipelineScheduler.WatchlistItem::getTicker)
-                .collect(Collectors.toSet());
+                .toList();
 
         List<PipelineRunEntity> runs = ticker != null
                 ? pipelineRunRepository.findByTickerOrderByExecutedAtDesc(ticker)
                         .stream().filter(r -> activeTickers.contains(r.getTicker())).toList()
-                : pipelineRunRepository.findTop50ByOrderByExecutedAtDesc()
-                        .stream().filter(r -> activeTickers.contains(r.getTicker())).toList();
+                : pipelineRunRepository.findTop50ByTickerInOrderByExecutedAtDesc(activeTickers);
         return ResponseEntity.ok(runs.stream().map(r -> {
             Map<String, Object> summary = toSummary(r);
             outcomeRecordRepository.findByRunId(r.getRunId()).ifPresent(o -> {

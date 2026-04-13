@@ -43,8 +43,8 @@ public class UserCommitController {
                 "id", entity.getId() != null ? entity.getId() : 0,
                 "runId", request.runId(),
                 "status", "saved",
-                "committedAt", entity.getCommittedAt() != null ? entity.getCommittedAt() + "Z" : null,
-                "updatedAt", entity.getUpdatedAt() != null ? entity.getUpdatedAt() + "Z" : null
+                "committedAt", entity.getCommittedAt(),
+                "updatedAt", entity.getUpdatedAt()
         ));
     }
 
@@ -73,8 +73,8 @@ public class UserCommitController {
         m.put("userNote", e.getUserNote());
         m.put("userLevelView", e.getUserLevelView());
         m.put("agreedWithAi", e.getAgreedWithAi());
-        m.put("committedAt", e.getCommittedAt() != null ? e.getCommittedAt() + "Z" : null);
-        m.put("updatedAt", e.getUpdatedAt() != null ? e.getUpdatedAt() + "Z" : null);
+        m.put("committedAt", e.getCommittedAt());
+        m.put("updatedAt", e.getUpdatedAt());
         return m;
     }
 

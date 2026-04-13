@@ -39,8 +39,8 @@ public interface PipelineRunRepository extends JpaRepository<PipelineRunEntity, 
     @Query("SELECT r FROM PipelineRunEntity r WHERE r.executedAt = (SELECT MAX(r2.executedAt) FROM PipelineRunEntity r2 WHERE r2.ticker = r.ticker)")
     List<PipelineRunEntity> findLatestPerTicker();
 
-    // 최근 N개 run (트랙레코드용)
-    List<PipelineRunEntity> findTop50ByOrderByExecutedAtDesc();
+    // active ticker 기준 최근 N개 run (트랙레코드용)
+    List<PipelineRunEntity> findTop50ByTickerInOrderByExecutedAtDesc(List<String> tickers);
 
     // 특정 ticker의 run 목록 (종목 히스토리용)
     List<PipelineRunEntity> findByTickerOrderByExecutedAtDesc(String ticker);
