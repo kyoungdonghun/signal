@@ -26,8 +26,8 @@ export function TickerDetailPage() {
         const entries = await Promise.all(
           data.map(async r => {
             try {
-              const commits = await api.getUserCommits(r.runId);
-              return [r.runId, commits.length > 0] as [string, boolean];
+              const commit = await api.getUserCommit(r.runId);
+              return [r.runId, commit != null] as [string, boolean];
             } catch {
               return [r.runId, false] as [string, boolean];
             }

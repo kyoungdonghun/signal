@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/client';
+import type { LevelCommitVerdict, ReasoningQualityRow } from '../api/client';
 import { StatusSummary } from '../components/StatusBadge';
 import { CommitForm } from './CommitForm';
 import type { RunDetail } from '../types';
@@ -17,12 +18,22 @@ export function RunDetailPage() {
   const { ticker, runId } = useParams<{ ticker: string; runId: string }>();
   const navigate = useNavigate();
   const [run, setRun] = useState<RunDetail | null>(null);
+  const [levelVerdicts, setLevelVerdicts] = useState<LevelCommitVerdict[]>([]);
+  const [reasoningChecks, setReasoningChecks] = useState<ReasoningQualityRow[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!runId) return;
-    api.getRunDetail(runId)
-      .then(setRun)
+    Promise.all([
+      api.getRunDetail(runId),
+      api.getLevelVerdicts(runId),
+      api.getReasoningQuality(runId),
+    ])
+      .then(([runData, verdicts, checks]) => {
+        setRun(runData);
+        setLevelVerdicts(verdicts);
+        setReasoningChecks(checks);
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [runId]);
@@ -33,6 +44,14 @@ export function RunDetailPage() {
   const ip = run.fullResult?.ip;
   const tr = run.fullResult?.tr;
   const detail = ip?.details?.[0];
+  const groupedVerdicts = tr?.levelCommits?.map(levelCommit => {
+    const verdicts = levelVerdicts.filter(v =>
+      v.levelValue === levelCommit.level &&
+      v.levelType === levelCommit.type &&
+      v.basis === levelCommit.basis
+    );
+    return { levelCommit, verdicts };
+  }) ?? [];
   const relevantNews = (run.fullResult?.taggedNews ?? [])
     .filter(n => n.relevance === 'High' || n.relevance === 'Medium')
     .sort((a, _b) => (a.relevance === 'High' ? -1 : 1));
@@ -134,6 +153,74 @@ export function RunDetailPage() {
 
         {ip?.closingStatement && (
           <div className={styles.closing}>{ip.closingStatement}</div>
+        )}
+
+        {groupedVerdicts.length > 0 && (
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>레벨 관찰과 사후 판정</div>
+            <div className={styles.sourceList}>
+              {groupedVerdicts.map(({ levelCommit, verdicts }, index) => (
+                <div key={`${levelCommit.level}-${index}`} className={styles.topAttentionBox}>
+                  <div className={styles.topAttentionTitle}>
+                    {levelCommit.type} / {levelCommit.basis} / {levelCommit.level.toLocaleString()}
+                  </div>
+                  <div className={styles.topAttentionText}>{levelCommit.description}</div>
+                  {verdicts.length > 0 ? (
+                    verdicts.map(v => (
+                      <div key={`${v.horizon}-${v.levelValue}`} className={styles.metaRow} style={{ marginTop: '0.75rem' }}>
+                        <div className={styles.metaItem}>
+                          <span className={styles.metaLabel}>기간</span>
+                          <span className={styles.metaValue}>{v.horizon}</span>
+                        </div>
+                        <div className={styles.metaItem}>
+                          <span className={styles.metaLabel}>판정</span>
+                          <span className={styles.metaValue}>{v.verdict}</span>
+                        </div>
+                        <div className={styles.metaItem}>
+                          <span className={styles.metaLabel}>관측가</span>
+                          <span className={styles.metaValue}>
+                            {v.observedPrice != null ? v.observedPrice.toLocaleString() : '-'}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className={styles.bodyText}>아직 판정 데이터가 없습니다.</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {reasoningChecks.length > 0 && (
+          <div className={styles.section}>
+            <div className={styles.sectionTitle}>Reasoning 품질 관측</div>
+            <div className={styles.sourceList}>
+              {reasoningChecks.map(check => (
+                <div key={check.path} className={styles.topAttentionBox}>
+                  <div className={styles.topAttentionTitle}>
+                    {check.path} / {check.status} / score {check.score}
+                  </div>
+                  <div className={styles.topAttentionText}>{check.note}</div>
+                  <div className={styles.metaRow} style={{ marginTop: '0.75rem' }}>
+                    <div className={styles.metaItem}>
+                      <span className={styles.metaLabel}>구체 참조</span>
+                      <span className={styles.metaValue}>{check.hasSpecificReference ? 'yes' : 'no'}</span>
+                    </div>
+                    <div className={styles.metaItem}>
+                      <span className={styles.metaLabel}>판단 연결</span>
+                      <span className={styles.metaValue}>{check.hasConnection ? 'yes' : 'no'}</span>
+                    </div>
+                    <div className={styles.metaItem}>
+                      <span className={styles.metaLabel}>반증 가능</span>
+                      <span className={styles.metaValue}>{check.hasFalsifiability ? 'yes' : 'no'}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         <CommitForm runId={run.runId} ticker={run.ticker} aiCrossResult={run.crossResult} />

@@ -20,16 +20,19 @@ public class PipelineScheduler {
 
     private final PipelineService pipelineService;
     private final OutcomeService outcomeService;
+    private final LevelCommitVerdictService levelCommitVerdictService;
     private final WatchlistProperties watchlistProperties;
     private final SchedulerLogRepository schedulerLogRepository;
     private final AtomicBoolean running = new AtomicBoolean(false);
 
     public PipelineScheduler(PipelineService pipelineService,
                               OutcomeService outcomeService,
+                              LevelCommitVerdictService levelCommitVerdictService,
                               WatchlistProperties watchlistProperties,
                               SchedulerLogRepository schedulerLogRepository) {
         this.pipelineService = pipelineService;
         this.outcomeService = outcomeService;
+        this.levelCommitVerdictService = levelCommitVerdictService;
         this.watchlistProperties = watchlistProperties;
         this.schedulerLogRepository = schedulerLogRepository;
     }
@@ -54,6 +57,12 @@ public class PipelineScheduler {
             outcomeService.fillOutcomes();
         } catch (Exception e) {
             System.err.println("[Scheduler] outcome 채움 실패: " + e.getMessage());
+        }
+
+        try {
+            levelCommitVerdictService.evaluatePendingVerdicts();
+        } catch (Exception e) {
+            System.err.println("[Scheduler] level_commit verdict 평가 실패: " + e.getMessage());
         }
 
         // 2. 오늘 파이프라인 실행

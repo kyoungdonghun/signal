@@ -11,6 +11,114 @@
   margin-top: var(--space-1);
 }
 
+.summaryStrip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.summaryCard {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.summaryLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.summaryValue {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+}
+
+.driftPanel {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.panelHeading {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+.panelSubheading {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-1);
+}
+
+.driftList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.driftItem {
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.driftTicker {
+  font-weight: 700;
+}
+
+.driftStateWrap {
+  display: flex;
+}
+
+.driftState {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.driftStable {
+  background: color-mix(in srgb, var(--color-bullish) 12%, white);
+  color: var(--color-bullish);
+}
+
+.driftMedium {
+  background: color-mix(in srgb, var(--color-conflict) 12%, white);
+  color: var(--color-conflict);
+}
+
+.driftHigh {
+  background: color-mix(in srgb, var(--color-bearish) 12%, white);
+  color: var(--color-bearish);
+}
+
+.driftInsufficient {
+  background: color-mix(in srgb, var(--color-border) 30%, white);
+  color: var(--color-text-secondary);
+}
+
+.driftMeta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -47,6 +155,10 @@
 
 .table tbody tr:hover { background: var(--color-surface-hover); }
 
+.clickableRow {
+  cursor: pointer;
+}
+
 .ticker { font-weight: 700; }
 
 .date { color: var(--color-text-secondary); }
@@ -69,8 +181,39 @@
 
 .noCommit { color: var(--color-text-muted); }
 
+.aligned {
+  color: var(--color-bullish);
+  font-weight: 600;
+}
+
+.misaligned {
+  color: var(--color-conflict);
+  font-weight: 600;
+}
+
+.verdictCell {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
 .loading, .empty {
   text-align: center;
   padding: var(--space-12);
   color: var(--color-text-muted);
+}
+
+@media (max-width: 960px) {
+  .summaryStrip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .driftList {
+    grid-template-columns: 1fr;
+  }
+
+  .table {
+    display: block;
+    overflow-x: auto;
+  }
 }

@@ -42,9 +42,9 @@ export function CommitForm({ runId, ticker, aiCrossResult }: Props) {
   const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
-    api.getUserCommits(runId)
-      .then((data: ExistingCommit[]) => {
-        if (data && data.length > 0) setExisting(data[0]);
+    api.getUserCommit(runId)
+      .then((data: ExistingCommit | null) => {
+        if (data) setExisting(data);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -62,6 +62,13 @@ export function CommitForm({ runId, ticker, aiCrossResult }: Props) {
         userNote: note,
         agreedWithAi: aiCrossResult ? selected === aiCrossResult : false,
         userLevelView: levelView || undefined,
+      });
+      setExisting({
+        userCrossResult: selected,
+        userNote: note,
+        userLevelView: levelView,
+        committedAt: new Date().toISOString(),
+        agreedWithAi: aiCrossResult ? selected === aiCrossResult : false,
       });
       setSubmitted(true);
     } catch (e) {

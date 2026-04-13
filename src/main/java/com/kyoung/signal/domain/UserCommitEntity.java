@@ -32,6 +32,9 @@ public class UserCommitEntity {
     @Column(name = "user_level_view", columnDefinition = "TEXT")
     private String userLevelView;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     protected UserCommitEntity() {}
 
     public static UserCommitEntity of(String runId, String ticker,
@@ -45,7 +48,17 @@ public class UserCommitEntity {
         e.userNote = userNote;
         e.agreedWithAi = agreedWithAi;
         e.userLevelView = userLevelView;
+        e.updatedAt = e.committedAt;
         return e;
+    }
+
+    public void update(String userCrossResult, String userNote,
+                       Boolean agreedWithAi, String userLevelView) {
+        this.userCrossResult = userCrossResult;
+        this.userNote = userNote;
+        this.agreedWithAi = agreedWithAi;
+        this.userLevelView = userLevelView;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public Long getId()                { return id; }
@@ -56,4 +69,5 @@ public class UserCommitEntity {
     public String getUserNote()        { return userNote; }
     public Boolean getAgreedWithAi()   { return agreedWithAi; }
     public String getUserLevelView()   { return userLevelView; }
+    public String getUpdatedAt()       { return updatedAt != null ? updatedAt.toString() : null; }
 }

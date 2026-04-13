@@ -171,7 +171,7 @@ NT (태깅)                           |
 | Phase | Content | Status |
 |-------|---------|--------|
 | Phase 1 | NC/NF/NT + TC/TR + CA + IS/IA/IP 기본 파이프라인 | **Current** |
-| Phase 1.5 | **메타 레이어** — 트랙레코드 / 드리프트 감지 / 캘리브레이션 / reasoning 품질 검증기. "선의의 경쟁"의 실행층 | Pending |
+| Phase 1.5 | **메타 레이어** — 트랙레코드 / 드리프트 감지 / 캘리브레이션 / reasoning 품질 검증기. "선의의 경쟁"의 실행층 | Pending (bootstrap instrumentation only) |
 | Phase 2 | 뉴스 심화 (NT 클러스터 단위 재작업, tone_intensity, source_agreement, tone_velocity) + DART/EDGAR 공시 | Pending |
 | Phase 3 | 기술 지표 확장 (MACD → 볼린저밴드), 캔들 패턴, 백테스팅, 체제 감지 | Pending |
 | Phase 4 | 교차 스트림 확장 (Deferred — 데이터 접근/정합성 비용으로 재평가 대기), 포트폴리오, 변동성/베타/샤프 | Deferred |
@@ -179,6 +179,8 @@ NT (태깅)                           |
 **Phase 1.5 신설 배경 (2026-04-10):** 오늘 재작성된 원칙 #2("commit하되 대리 실행 금지 + 시간이 심판")의 **실행층**이 원래 로드맵에 없었음. 기록·드리프트·캘리브레이션 없이는 "선의의 경쟁"이 수사에 머무름. Phase 2의 tone_velocity(시간 흐름 분석)도 메타 레이어의 과거 run 기록에 의존하므로 Phase 1.5가 선행되어야 함.
 
 **⚠️ Phase 1.5에 착수하기 전 반드시 `docs/meta-layer-charter.md`를 먼저 읽을 것.** 이 헌장은 메타 레이어의 스펙이 아니라 **존재 이유·철학적 전제·절대 금지**를 담은 앵커 문서다. 세션 간 기억 휘발로 인해 "무엇"은 전달돼도 "왜"가 소실되는 것을 방지하기 위해 2026-04-11에 작성됨. 진입 조건 4개(Phase 1 2주 가동, run 100건 이상, reasoning 품질 감각, 명시적 사용자 요청)가 충족되기 전에는 착수 금지.
+
+**현재 저장소의 해석:** 100건 이전에 들어간 메타 레이어 관련 코드는 최종 설계가 아니라 `bootstrap instrumentation`으로 간주한다. 즉 기록, 비교, 계측을 위한 임시 관측 장치이며, scoring/calibration/reasoning 판정 모델을 확정한 것으로 취급하지 않는다.
 
 ### Phase 1 Implementation Steps
 

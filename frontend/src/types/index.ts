@@ -46,6 +46,13 @@ export interface TrConflict {
   description: string;
 }
 
+export interface TrLevelCommit {
+  level: number;
+  type: string;
+  basis: string;
+  description: string;
+}
+
 export interface TrOutput {
   runId: string;
   ticker: string;
@@ -53,6 +60,7 @@ export interface TrOutput {
   confidence: Confidence;
   conflicts: TrConflict[];
   warnings: TrConflict[];
+  levelCommits: TrLevelCommit[];
   reasoning: string;
 }
 
