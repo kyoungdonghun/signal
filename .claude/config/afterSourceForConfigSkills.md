@@ -23,7 +23,7 @@
 
 ### phase_gate 조건부 스킬 활성화
 - **적용 대상**: workspace.json `tech_stack_documents`
-- **내용**: ATStudio의 `"phase_gate": "phase-2"` 패턴처럼, 스킬을 Phase 조건에 따라 자동 활성화/비활성화. 예: eslint/prettier는 React 대시보드 Phase에서만 활성화.
+- **내용**: 스킬을 Phase 조건에 따라 자동 활성화/비활성화. 예: React 관련 스킬은 대시보드 Phase에서만 활성화.
 - **왜 지금은 아닌가**: Phase 1은 백엔드 중심. 프론트엔드 스킬 조건부 제어가 아직 불필요.
 - **적합 시점**: Phase 2 (React 대시보드 구현 시작 시)
 
@@ -55,8 +55,8 @@
 
 ### Runtime 에이전트 전용 Tier 0 헌법 문서 (signal-principles.md)
 - **적용 대상**: context-injection-rules.json `tier_defaults` + Runtime 에이전트 전체
-- **내용**: 현재 Runtime 에이전트의 "매수/매도 금지" 원칙은 `runtime_agent_constraints` 섹션에만 있음. 이것을 별도의 `docs/standards/signal-principles.md` 파일로 분리해 Tier 0으로 등록하면, 모든 에이전트에 자동 주입되어 원칙 위반 가능성을 구조적으로 차단 가능.
-- **왜 지금은 아닌가**: `docs/standards/` 문서 체계가 아직 구축되지 않음. 에이전트 파일의 "절대 금지" 섹션이 현재는 충분.
+- **내용**: 현재 Runtime 에이전트의 "매수/매도 금지" 원칙은 `AGENTS.md`, `CLAUDE.md`, `runtime_agent_constraints`에 분산되어 있음. 이것을 별도의 vendor-neutral 원칙 문서로 분리해 Tier 0으로 등록하면, 모든 에이전트에 자동 주입되어 원칙 위반 가능성을 구조적으로 차단 가능.
+- **왜 지금은 아닌가**: 공통 문서 계층이 아직 얇고, 현재는 `AGENTS.md` + 에이전트 파일 조합으로 충분하다.
 - **적합 시점**: Phase 2 (docs/ 문서 체계 구축 시)
 
 ### 에이전트 간 데이터 계약 검증 (schema validation)

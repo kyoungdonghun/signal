@@ -10,28 +10,31 @@
 set -e
 
 echo ""
-echo "🧪 Running full test suite..."
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "Running full test suite..."
+echo "----------------------------------------"
 
-# Run full test suite including integration tests
-if ! claude code /test 2>&1 | tail -20; then
+# Run backend tests
+if ! ./gradlew test; then
   echo ""
-  echo "❌ Tests failed"
-  echo "💡 Fix: Run '/test' to see details"
+  echo "Backend tests failed"
+  echo "Fix: Run './gradlew test' to see details"
   echo ""
   exit 1
 fi
 
-# Optional: Check test coverage
+# Run frontend production build
 echo ""
-echo "📊 Checking test coverage..."
-if ! claude code /test-coverage 2>&1 | grep -E "Coverage|%"; then
+echo "Running frontend build..."
+if ! (cd frontend && npm run build); then
   echo ""
-  echo "⚠️  Coverage check failed (continuing anyway)"
+  echo "Frontend build failed"
+  echo "Fix: Run 'cd frontend && npm run build' to see details"
+  echo ""
+  exit 1
 fi
 
 echo ""
-echo "✅ All tests passed"
+echo "Backend tests and frontend build passed"
 echo ""
 
 exit 0

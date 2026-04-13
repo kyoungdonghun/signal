@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# Pre-commit hook for documentation integrity (OPTIMIZED)
+# Pre-commit hook for documentation integrity
 # Runs when docs/ files are changed
 #
-# Performance: ~0.05 seconds (경량 Python 스크립트 사용)
+# Performance: lightweight Python validation
 # Installation: /manage-hooks install docs-validation
 # Bypass: git commit --no-verify
 #
@@ -16,10 +16,10 @@ if ! git diff --cached --name-only | grep -q '^docs/'; then
 fi
 
 echo ""
-echo "📚 Documentation changes detected"
+echo "Documentation changes detected"
 
-# Run quick validation (optimized Python script)
-if ! python3 .claude/scripts/quick_validate.py; then
+# Run documentation validation against the current SIGNAL docs baseline
+if ! python3 .claude/skills/validate-docs/scripts/validate_docs.py; then
   echo ""
   exit 1
 fi

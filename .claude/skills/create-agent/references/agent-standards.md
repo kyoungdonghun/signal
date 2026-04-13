@@ -63,7 +63,7 @@ Every agent output must include both sets:
 - Commands executed with outputs
 - Log snippets or error messages
 - Reproduction steps
-- Follow-up WI recommendations
+- Follow-up task recommendations
 
 ## Agent Categories
 

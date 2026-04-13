@@ -1,6 +1,6 @@
 ---
 name: validate-docs
-description: This skill should be used when validating documentation consistency and integrity. It checks internal links, Tier 0 document references, and traceability ID validity.
+description: This skill should be used when validating documentation consistency and integrity. It checks internal links and current core project document presence.
 disable-model-invocation: false
 user-invocable: true
 allowed-tools: Read, Grep, Glob, Bash
@@ -11,15 +11,14 @@ model: sonnet
 
 ## Purpose
 
-Validate documentation consistency and integrity by checking links, required documents, and traceability IDs.
+Validate documentation consistency and integrity by checking links and required core project documents.
 
 ## When to Use
 
 - After modifying documentation files
 - Before commits or pull requests that include doc changes
 - When checking for broken internal links
-- When verifying traceability ID compliance
-- When ensuring Tier 0 documents are properly referenced
+- When ensuring current core project documents are properly referenced
 
 ## How to Use
 
@@ -38,53 +37,37 @@ python3 .claude/skills/validate-docs/scripts/validate_docs.py
    - Check relative and absolute path accuracy
    - Detect broken links to non-existent files
 
-2. **Tier 0 Document References**
-   - Verify existence of required core documents:
-     - `docs/standards/core-principles.md`
-     - `docs/standards/documentation-standards.md`
-     - `docs/standards/development-standards.md`
-     - `docs/standards/prompt-caching-strategy.md`
-
-3. **Traceability IDs**
-   - Validate ID format compliance:
-     - `REQ-YYYYMMDD-<PRJ>-###` (Requirements, e.g., `REQ-20260211-ATS-001`)
-     - `WI-YYYYMMDD-<PRJ>-###` (Work Items, e.g., `WI-20260211-ATS-001`)
-     - `STD-###` (Standards)
-   - Detect duplicate IDs across documents
-
-4. **Document Index**
-   - Verify `docs/index.md` link validity
-   - Detect orphaned documents (not listed in index)
+2. **Core Project Documents**
+   - Verify existence of current baseline documents:
+     - `AGENTS.md`
+     - `CLAUDE.md`
+     - `.claude/config/PIPELINE.md`
+     - `docs/meta-layer-charter.md`
 
 ### Handling Results
 
 **Error Types:**
-- **Error**: Broken links, missing Tier 0 docs, duplicate IDs
-- **Warning**: Orphaned documents, non-standard formatting
+- **Error**: Broken links, missing core documents
+- **Warning**: Read failures or optional-document issues
 
 **Example Output:**
 
 ```
 [VALIDATION RESULTS]
 
-✓ Tier 0 Documents: All required files exist
+✓ Core Documents: All required files exist
 
 ✗ Internal Links: 2 broken links found
   - docs/guides/workflow.md:15 → docs/missing.md (file not found)
   - README.md:23 → docs/old-path.md (file not found)
 
-✓ Traceability IDs: No duplicates, format valid
-
-⚠ Document Index: 1 orphan document
-  - docs/experimental/draft.md (not listed in docs/index.md)
-
 [SUMMARY]
-Status: FAILED (2 errors, 1 warning)
+Status: FAILED (2 errors)
 Action Required: Fix broken links
 ```
 
 ## Exit Codes
 
 - `0`: All validations passed
-- `1`: Errors found (broken links, missing docs, duplicate IDs)
-- `2`: Warnings only (orphaned documents)
+- `1`: Errors found (broken links, missing docs)
+- `2`: Warnings only

@@ -1,111 +1,218 @@
 {
   "version": "1.0",
-  "_description": "SIGNAL 프로젝트 동적 컨텍스트 주입 규칙. Build Layer(11개)와 Runtime Layer(9개) 에이전트를 모두 관리한다. 핵심 원칙: 어떤 에이전트도 매수/매도를 권고하지 않는다.",
-
+  "_description": "Dynamic context injection rules for SIGNAL. This file coordinates build-layer and runtime-layer references while preserving runtime safety constraints.",
   "tier_defaults": {
-    "_comment": "0=헌법(변경불가), 1=정책, 2=가이드, 3=참조",
-
-    "docs/standards/core-principles.md": 0,
-    "docs/standards/development-standards.md": 0,
-    "docs/standards/documentation-standards.md": 0,
-    "docs/standards/glossary.md": 0,
-    "docs/policies/security-policy.md": 1,
-    "docs/architecture/system-design.md": 1,
+    "_comment": "Tier 0 is constitution-level, Tier 1 is strong guidance, Tier 2 is contextual guidance, Tier 3 is future-facing reference.",
+    "AGENTS.md": 0,
+    "CLAUDE.md": 0,
+    "docs/meta-layer-charter.md": 1,
     ".claude/config/PIPELINE.md": 0,
-
-    "docs/standards/*": 0,
-    "docs/policies/*": 1,
-    "docs/architecture/*": 1,
-    "docs/adr/*": 1,
-    "docs/guides/*": 2,
-    "docs/design/*": 2,
-    "docs/templates/*": 2,
+    "docs/*": 2,
     ".claude/agents/runtime/*": 1,
     ".claude/config/afterSource.md": 3
   },
-
   "category_agent_mapping": {
-    "_comment": "문서 카테고리별 관련 에이전트 그룹. Build Layer와 Runtime Layer 분리.",
-
-    "standards": ["*"],
-    "policies": ["eo", "pg", "sa", "cr"],
-    "architecture": ["sa", "se", "eo", "cr"],
-    "pipeline": ["nc", "nf", "nt", "tc", "tr", "ca", "is", "ia", "ip"],
-    "news-pipeline": ["nc", "nf", "nt"],
-    "technical-analysis": ["tc", "tr"],
-    "cross-validation": ["ca"],
-    "briefing": ["is", "ia", "ip"],
-    "guides": ["se", "re", "docops", "qa"],
-    "design": ["uv", "se", "sa"],
-    "templates": ["se", "sa", "docops", "uv", "ps"]
-  },
-
-  "agent_required_tiers": {
-    "_comment": "에이전트별 필수 Tier 레벨. Runtime 에이전트는 PIPELINE.md를 항상 주입받는다.",
-
-    "ps":  [0],
-    "eo":  [0, 1],
-    "sa":  [0, 1],
-    "se":  [0],
-    "re":  [0],
-    "pg":  [0, 1],
-    "tr":  [0],
-    "uv":  [0],
-    "docops": [0, 1],
-    "qa":  [0],
-    "cr":  [0, 1],
-
-    "nc":  [0, 1],
-    "nf":  [0, 1],
-    "nt":  [0, 1],
-    "tc":  [0, 1],
-    "tr_runtime": [0, 1],
-    "ca":  [0, 1],
-    "is":  [0, 1],
-    "ia":  [0, 1],
-    "ip":  [0, 1]
-  },
-
-  "runtime_agent_constraints": {
-    "_comment": "Runtime 에이전트 공통 제약. 이 규칙은 헌법(Tier 0)과 동일한 효력을 가진다.",
-
-    "global_prohibitions": [
-      "매수 권고 금지",
-      "매도 권고 금지",
-      "투자 타이밍 제시 금지",
-      "포트폴리오 비중 제안 금지",
-      "원클릭 실행 기능 금지"
+    "_comment": "Document category to agent-group mapping.",
+    "standards": [
+      "*"
     ],
-    "final_statement_rule": "IP 에이전트의 마지막 문장은 반드시 '판단은 당신의 몫입니다.' 이어야 한다.",
-    "data_flow_direction": "NC → NF → NT → CA ← TC ← TR → IS → IA → IP → 사람",
+    "policies": [
+      "eo",
+      "pg",
+      "sa",
+      "cr"
+    ],
+    "architecture": [
+      "sa",
+      "se",
+      "eo",
+      "cr"
+    ],
+    "pipeline": [
+      "nc",
+      "nf",
+      "nt",
+      "tc",
+      "tr",
+      "ca",
+      "is",
+      "ia",
+      "ip"
+    ],
+    "news-pipeline": [
+      "nc",
+      "nf",
+      "nt"
+    ],
+    "technical-analysis": [
+      "tc",
+      "tr"
+    ],
+    "cross-validation": [
+      "ca"
+    ],
+    "briefing": [
+      "is",
+      "ia",
+      "ip"
+    ],
+    "guides": [
+      "se",
+      "re",
+      "docops",
+      "qa"
+    ],
+    "design": [
+      "uv",
+      "se",
+      "sa"
+    ],
+    "templates": [
+      "se",
+      "sa",
+      "docops",
+      "uv",
+      "ps"
+    ]
+  },
+  "agent_required_tiers": {
+    "_comment": "Minimum required tiers by agent. Runtime agents always inherit PIPELINE.md as part of the active contract.",
+    "ps": [
+      0
+    ],
+    "eo": [
+      0,
+      1
+    ],
+    "sa": [
+      0,
+      1
+    ],
+    "se": [
+      0
+    ],
+    "re": [
+      0
+    ],
+    "pg": [
+      0,
+      1
+    ],
+    "tr": [
+      0
+    ],
+    "uv": [
+      0
+    ],
+    "docops": [
+      0,
+      1
+    ],
+    "qa": [
+      0
+    ],
+    "cr": [
+      0,
+      1
+    ],
+    "nc": [
+      0,
+      1
+    ],
+    "nf": [
+      0,
+      1
+    ],
+    "nt": [
+      0,
+      1
+    ],
+    "tc": [
+      0,
+      1
+    ],
+    "tr_runtime": [
+      0,
+      1
+    ],
+    "ca": [
+      0,
+      1
+    ],
+    "is": [
+      0,
+      1
+    ],
+    "ia": [
+      0,
+      1
+    ],
+    "ip": [
+      0,
+      1
+    ]
+  },
+  "runtime_agent_constraints": {
+    "_comment": "Shared runtime constraints. These are intended to mirror the project constitution and pipeline contract.",
+    "global_prohibitions": [
+      "Do not issue buy recommendations.",
+      "Do not issue sell recommendations.",
+      "Do not provide direct investment instructions.",
+      "Do not propose portfolio weighting decisions.",
+      "Do not trigger real trading actions."
+    ],
+    "final_statement_rule": "The final IP-stage statement must preserve uncertainty and avoid presenting speculative conclusions as certain facts.",
+    "data_flow_direction": "NC -> NF -> NT -> CA -> TC -> TR -> IS -> IA -> IP",
     "pipeline_reference": ".claude/config/PIPELINE.md"
   },
-
   "task_type_documents": {
-    "_comment": "Phase 1 (keyword) + Phase 2 (LLM) 병렬 실행. 결과는 union merge.",
-
+    "_comment": "Phase 1 keyword matching and Phase 2 LLM inference both contribute to the final document set.",
     "matching_strategy": {
       "phase_1": "keyword_contains",
       "phase_2": "llm_inference",
       "execution": "parallel_always",
       "merge_strategy": "union_dedupe"
     },
-
     "types": [
       {
         "id": "market-data",
-        "description": "주가 데이터 수집, OHLCV 처리, Yahoo Finance API 연동",
-        "keywords": ["ohlcv", "주가", "시가", "고가", "저가", "종가", "거래량", "yahoo", "market data", "가격데이터"],
+        "description": "Market data collection, OHLCV handling, and Yahoo Finance integration.",
+        "keywords": [
+          "ohlcv",
+          "price",
+          "market data",
+          "ticker",
+          "quote",
+          "yahoo",
+          "주가",
+          "시가",
+          "고가",
+          "저가",
+          "종가",
+          "거래량"
+        ],
         "documents": [
           ".claude/agents/runtime/tc.md",
-          "docs/standards/development-standards.md"
+          ".claude/config/PIPELINE.md"
         ],
         "tier": 1
       },
       {
         "id": "news-pipeline",
-        "description": "뉴스 수집, RSS 파싱, NER, 중복 제거, 태깅",
-        "keywords": ["rss", "뉴스", "news", "수집", "collect", "태깅", "tagging", "ner", "중복", "dedup", "필터", "filter"],
+        "description": "News collection, RSS parsing, NER, deduplication, and filtering.",
+        "keywords": [
+          "rss",
+          "news",
+          "collect",
+          "tagging",
+          "ner",
+          "dedup",
+          "filter",
+          "뉴스",
+          "수집",
+          "필터",
+          "태깅"
+        ],
         "documents": [
           ".claude/agents/runtime/nc.md",
           ".claude/agents/runtime/nf.md",
@@ -115,8 +222,18 @@
       },
       {
         "id": "technical-analysis",
-        "description": "기술적 지표 계산 및 불안정 감지",
-        "keywords": ["ma", "rsi", "이동평균", "거래량비율", "기술적분석", "technical", "indicator", "지표", "불안정", "instability", "충돌", "conflict"],
+        "description": "Technical indicator calculation and instability detection.",
+        "keywords": [
+          "ma",
+          "rsi",
+          "technical",
+          "indicator",
+          "instability",
+          "conflict",
+          "기술분석",
+          "지표",
+          "이동평균"
+        ],
         "documents": [
           ".claude/agents/runtime/tc.md",
           ".claude/agents/runtime/tr.md"
@@ -125,8 +242,17 @@
       },
       {
         "id": "cross-validation",
-        "description": "뉴스-기술적 지표 교차 검증",
-        "keywords": ["교차검증", "cross validation", "aligned", "conflict", "uncertain", "ca", "집계", "aggregat"],
+        "description": "Cross-validation between news and technical signals.",
+        "keywords": [
+          "cross validation",
+          "aligned",
+          "conflict",
+          "uncertain",
+          "ca",
+          "교차검증",
+          "충돌",
+          "일치"
+        ],
         "documents": [
           ".claude/agents/runtime/ca.md",
           ".claude/config/PIPELINE.md"
@@ -135,8 +261,17 @@
       },
       {
         "id": "briefing",
-        "description": "정보 번역, 섹터 통합, 최종 전달",
-        "keywords": ["브리핑", "briefing", "요약", "summary", "번역", "translate", "섹터", "sector", "역피라미드", "전달", "present"],
+        "description": "Briefing generation, translation, and final presentation.",
+        "keywords": [
+          "briefing",
+          "summary",
+          "translate",
+          "sector",
+          "present",
+          "브리핑",
+          "요약",
+          "번역"
+        ],
         "documents": [
           ".claude/agents/runtime/is.md",
           ".claude/agents/runtime/ia.md",
@@ -146,8 +281,17 @@
       },
       {
         "id": "claude-api",
-        "description": "Claude API 연동, System Prompt 설계, 감성 분석",
-        "keywords": ["claude api", "system prompt", "프롬프트", "감성분석", "sentiment", "ai분석", "llm", "태깅일관성"],
+        "description": "Claude API integration, prompt design, and sentiment analysis.",
+        "keywords": [
+          "claude api",
+          "system prompt",
+          "prompt",
+          "sentiment",
+          "ai analysis",
+          "llm",
+          "프롬프트",
+          "감성분석"
+        ],
         "documents": [
           ".claude/agents/runtime/nt.md",
           ".claude/agents/runtime/is.md"
@@ -156,36 +300,78 @@
       },
       {
         "id": "security",
-        "description": "보안, 인증, API 키 관리",
-        "keywords": ["보안", "security", "api key", "인증", "auth", "credential", "token", "secret"],
+        "description": "Security, authentication, and API credential handling.",
+        "keywords": [
+          "security",
+          "api key",
+          "auth",
+          "credential",
+          "token",
+          "secret",
+          "보안",
+          "인증"
+        ],
         "documents": [
-          "docs/policies/security-policy.md"
+          "AGENTS.md",
+          "CLAUDE.md"
         ],
         "tier": 1
       },
       {
         "id": "architecture",
-        "description": "시스템 아키텍처, ADR, 구조 설계",
-        "keywords": ["아키텍처", "architecture", "adr", "시스템설계", "구조", "모듈", "pipeline", "파이프라인"],
+        "description": "System architecture, ADRs, and module structure.",
+        "keywords": [
+          "architecture",
+          "adr",
+          "structure",
+          "module",
+          "pipeline",
+          "아키텍처",
+          "설계",
+          "구조"
+        ],
         "documents": [
-          "docs/architecture/system-design.md",
+          "AGENTS.md",
           ".claude/config/PIPELINE.md"
         ],
         "tier": 1
       },
       {
         "id": "testing-qa",
-        "description": "테스트, 검증, 품질 보증",
-        "keywords": ["테스트", "test", "검증", "validation", "qa", "품질", "regression", "단위테스트", "unit test"],
-        "documents": [
-          "docs/policies/quality-gates.md"
+        "description": "Testing, validation, and regression verification.",
+        "keywords": [
+          "test",
+          "validation",
+          "qa",
+          "regression",
+          "unit test",
+          "테스트",
+          "검증"
         ],
-        "tier": [1, 2]
+        "documents": [
+          "AGENTS.md",
+          "CLAUDE.md"
+        ],
+        "tier": [
+          1,
+          2
+        ]
       },
       {
         "id": "future-enhancement",
-        "description": "고도화, Phase 2~4 기능, afterSource 항목",
-        "keywords": ["고도화", "phase2", "phase3", "phase4", "지식그래프", "백테스팅", "포트폴리오", "시나리오"],
+        "description": "Future enhancement items from afterSource and later phases.",
+        "keywords": [
+          "enhancement",
+          "phase2",
+          "phase3",
+          "phase4",
+          "knowledge graph",
+          "backtesting",
+          "portfolio",
+          "고도화",
+          "백테스팅",
+          "포트폴리오"
+        ],
         "documents": [
           ".claude/config/afterSource.md"
         ],
@@ -193,32 +379,37 @@
       },
       {
         "id": "ui-ux",
-        "description": "React 프론트엔드, 대시보드, 컴포넌트",
-        "keywords": ["ui", "ux", "react", "컴포넌트", "component", "대시보드", "dashboard", "프론트", "frontend"],
+        "description": "React frontend, UI components, and dashboard work.",
+        "keywords": [
+          "ui",
+          "ux",
+          "react",
+          "component",
+          "dashboard",
+          "frontend",
+          "프론트엔드",
+          "대시보드",
+          "컴포넌트"
+        ],
         "documents": [],
         "tier": 2,
-        "_note": "React 대시보드 구현 시 react-best-practices skill 활성화"
+        "_note": "Use react-best-practices for deeper frontend implementation guidance when relevant."
       }
     ],
-
     "llm_inference_config": {
       "search_scope": [
-        "docs/guides/*",
-        "docs/design/*",
-        "docs/architecture/*",
-        "docs/policies/*",
+        "docs/*",
         ".claude/agents/runtime/*",
         ".claude/config/*"
       ],
       "exclude_from_inference": [
-        "docs/standards/*",
+        "docs/references/*",
         ".claude/config/afterSource.md"
       ],
       "max_additional_docs": 5,
-      "instruction": "SIGNAL 프로젝트 컨텍스트에서 WI 내용을 분석하라. Runtime 에이전트(.claude/agents/runtime/)는 매수/매도 권고를 절대 하지 않는다는 원칙을 항상 유지한다. 관련 문서 경로를 반환하라."
+      "instruction": "Analyze the current SIGNAL task context. Always preserve the rule that runtime agents under .claude/agents/runtime/ must not issue buy or sell recommendations. Return the relevant document paths."
     }
   },
-
   "priority_rules": {
     "tier_precedence": "metadata_first",
     "conflict_resolution": "lowest_tier_wins",
@@ -229,56 +420,208 @@
       "3": 10
     }
   },
-
   "agent_specific_requirements": {
-    "_comment": "에이전트별 명시적 문서 요구사항.",
-
-    "ps":  { "required": ["docs/standards/core-principles.md"], "optional": [] },
-    "eo":  { "required": ["docs/standards/core-principles.md"], "optional": ["docs/policies/*"] },
-    "sa":  { "required": ["docs/standards/core-principles.md", "docs/standards/development-standards.md"], "optional": ["docs/adr/*"] },
-    "se":  { "required": ["docs/standards/core-principles.md", "docs/standards/development-standards.md"], "optional": ["docs/design/*"] },
-    "re":  { "required": ["docs/standards/core-principles.md"], "optional": ["docs/guides/*"] },
-    "pg":  { "required": ["docs/standards/core-principles.md", "docs/policies/security-policy.md"], "optional": [] },
-    "tr":  { "required": ["docs/standards/core-principles.md"], "optional": [] },
-    "uv":  { "required": ["docs/standards/core-principles.md"], "optional": ["docs/design/*"] },
-    "docops": { "required": ["docs/standards/core-principles.md", "docs/standards/documentation-standards.md", "docs/standards/glossary.md"], "optional": [] },
-    "qa":  { "required": ["docs/standards/core-principles.md", "docs/standards/development-standards.md"], "optional": [] },
-    "cr":  { "required": ["docs/standards/core-principles.md", "docs/standards/development-standards.md"], "optional": ["docs/policies/security-policy.md"] },
-
-    "nc":  { "required": ["docs/standards/core-principles.md", ".claude/config/PIPELINE.md", ".claude/agents/runtime/nc.md"], "optional": [] },
-    "nf":  { "required": ["docs/standards/core-principles.md", ".claude/config/PIPELINE.md", ".claude/agents/runtime/nf.md"], "optional": [] },
-    "nt":  { "required": ["docs/standards/core-principles.md", ".claude/config/PIPELINE.md", ".claude/agents/runtime/nt.md"], "optional": [] },
-    "tc":  { "required": ["docs/standards/core-principles.md", ".claude/config/PIPELINE.md", ".claude/agents/runtime/tc.md"], "optional": [] },
-    "tr_runtime": { "required": ["docs/standards/core-principles.md", ".claude/config/PIPELINE.md", ".claude/agents/runtime/tr.md"], "optional": [] },
-    "ca":  { "required": ["docs/standards/core-principles.md", ".claude/config/PIPELINE.md", ".claude/agents/runtime/ca.md"], "optional": [] },
-    "is":  { "required": ["docs/standards/core-principles.md", ".claude/config/PIPELINE.md", ".claude/agents/runtime/is.md"], "optional": [] },
-    "ia":  { "required": ["docs/standards/core-principles.md", ".claude/config/PIPELINE.md", ".claude/agents/runtime/ia.md"], "optional": [] },
-    "ip":  { "required": ["docs/standards/core-principles.md", ".claude/config/PIPELINE.md", ".claude/agents/runtime/ip.md"], "optional": [] }
+    "_comment": "Required and optional document inputs by agent.",
+    "ps": {
+      "required": [
+        "AGENTS.md"
+      ],
+      "optional": [
+        "CLAUDE.md"
+      ]
+    },
+    "eo": {
+      "required": [
+        "AGENTS.md",
+        "CLAUDE.md"
+      ],
+      "optional": []
+    },
+    "sa": {
+      "required": [
+        "AGENTS.md",
+        "CLAUDE.md"
+      ],
+      "optional": [
+        "docs/meta-layer-charter.md"
+      ]
+    },
+    "se": {
+      "required": [
+        "AGENTS.md",
+        "CLAUDE.md"
+      ],
+      "optional": []
+    },
+    "re": {
+      "required": [
+        "AGENTS.md"
+      ],
+      "optional": [
+        "CLAUDE.md"
+      ]
+    },
+    "pg": {
+      "required": [
+        "AGENTS.md",
+        "CLAUDE.md"
+      ],
+      "optional": []
+    },
+    "tr": {
+      "required": [
+        "AGENTS.md"
+      ],
+      "optional": []
+    },
+    "uv": {
+      "required": [
+        "AGENTS.md"
+      ],
+      "optional": []
+    },
+    "docops": {
+      "required": [
+        "AGENTS.md",
+        "CLAUDE.md"
+      ],
+      "optional": [
+        "docs/meta-layer-charter.md"
+      ]
+    },
+    "qa": {
+      "required": [
+        "AGENTS.md",
+        "CLAUDE.md"
+      ],
+      "optional": []
+    },
+    "cr": {
+      "required": [
+        "AGENTS.md",
+        "CLAUDE.md"
+      ],
+      "optional": []
+    },
+    "nc": {
+      "required": [
+        "AGENTS.md",
+        ".claude/config/PIPELINE.md",
+        ".claude/agents/runtime/nc.md"
+      ],
+      "optional": []
+    },
+    "nf": {
+      "required": [
+        "AGENTS.md",
+        ".claude/config/PIPELINE.md",
+        ".claude/agents/runtime/nf.md"
+      ],
+      "optional": []
+    },
+    "nt": {
+      "required": [
+        "AGENTS.md",
+        ".claude/config/PIPELINE.md",
+        ".claude/agents/runtime/nt.md"
+      ],
+      "optional": []
+    },
+    "tc": {
+      "required": [
+        "AGENTS.md",
+        ".claude/config/PIPELINE.md",
+        ".claude/agents/runtime/tc.md"
+      ],
+      "optional": []
+    },
+    "tr_runtime": {
+      "required": [
+        "AGENTS.md",
+        ".claude/config/PIPELINE.md",
+        ".claude/agents/runtime/tr.md"
+      ],
+      "optional": []
+    },
+    "ca": {
+      "required": [
+        "AGENTS.md",
+        ".claude/config/PIPELINE.md",
+        ".claude/agents/runtime/ca.md"
+      ],
+      "optional": []
+    },
+    "is": {
+      "required": [
+        "AGENTS.md",
+        ".claude/config/PIPELINE.md",
+        ".claude/agents/runtime/is.md"
+      ],
+      "optional": []
+    },
+    "ia": {
+      "required": [
+        "AGENTS.md",
+        ".claude/config/PIPELINE.md",
+        ".claude/agents/runtime/ia.md"
+      ],
+      "optional": []
+    },
+    "ip": {
+      "required": [
+        "AGENTS.md",
+        ".claude/config/PIPELINE.md",
+        ".claude/agents/runtime/ip.md"
+      ],
+      "optional": []
+    }
   },
-
   "tech_stack_documents": {
-    "_comment": "기술 스택 기반 조건부 문서 주입.",
-
+    "_comment": "Additional documents loaded by detected tech stack.",
     "java": {
-      "documents": ["docs/standards/development-standards.md"],
-      "applicable_agents": ["se", "sa", "qa", "cr", "pg"],
+      "documents": [
+        "AGENTS.md",
+        "CLAUDE.md"
+      ],
+      "applicable_agents": [
+        "se",
+        "sa",
+        "qa",
+        "cr",
+        "pg"
+      ],
       "tier": 0,
       "enabled": true,
-      "note": "Java/Spring Boot 코딩 표준."
+      "note": "Current repository baseline includes Java and Spring Boot."
     },
     "spring-boot": {
-      "documents": ["docs/standards/development-standards.md"],
-      "applicable_agents": ["se", "sa", "qa", "cr"],
+      "documents": [
+        "AGENTS.md",
+        "CLAUDE.md"
+      ],
+      "applicable_agents": [
+        "se",
+        "sa",
+        "qa",
+        "cr"
+      ],
       "tier": 0,
       "enabled": true,
-      "note": "Spring Boot 구현 표준. Entity-DTO 분리, Service 레이어 매핑."
+      "note": "Use for backend implementation and architecture work."
     },
     "react": {
-      "documents": [".claude/skills/react-best-practices/AGENTS.md"],
-      "applicable_agents": ["se", "qa", "cr", "uv"],
+      "documents": [
+        ".claude/skills/react-best-practices/AGENTS.md"
+      ],
+      "applicable_agents": [
+        "se",
+        "qa",
+        "cr",
+        "uv"
+      ],
       "tier": 2,
       "enabled": true,
-      "note": "React 대시보드 프론트엔드."
+      "note": "Use for frontend and dashboard work."
     }
   }
 }

@@ -69,7 +69,7 @@ Install a pre-defined hook template.
 → ✅ Made executable
 →
 → This hook will run on every commit when docs/ files change:
-→   1. Index count verification (/sync-docs-index --check)
+→   1. Core document presence validation
 →   2. Document path validation
 →   3. Link validation (/validate-docs)
 ```
@@ -164,7 +164,7 @@ This skill provides standardized hook templates in the `assets/` directory:
 **Purpose:** Validate documentation integrity before committing docs/ changes
 
 **Checks:**
-1. Index count sync (`/sync-docs-index --check`)
+1. Core document presence validation
 2. Document path validation (all referenced paths exist)
 3. Link validation (`/validate-docs`)
 
@@ -217,7 +217,7 @@ When creating custom hooks:
 2. **Fast execution:** Keep hooks under 5 seconds when possible
 3. **Clear messages:** Explain why the hook failed and how to fix it
 4. **Selective execution:** Only run when relevant files changed (use `git diff --cached --name-only`)
-5. **Provide fixes:** Suggest commands to resolve issues (e.g., `/sync-docs-index --fix`)
+5. **Provide fixes:** Suggest concrete project commands to resolve issues
 
 ## Resources
 

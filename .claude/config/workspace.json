@@ -32,17 +32,12 @@
       ]
     },
     "skills": [
-      "create-req",
-      "create-wi-handoff-packet",
-      "create-wi-evidence-pack",
       "lint",
       "validate-docs",
-      "typecheck",
       "test",
       "test-coverage",
       "build-check",
       "create-agent",
-      "sync-docs-index",
       "react-best-practices",
       "yahoo-finance-fetch",
       "rss-feed-fetch",
@@ -60,16 +55,20 @@
       "routing_triggers": [
         "signal",
         "stock",
+        "stocks",
         "market",
+        "ticker",
+        "watchlist",
+        "news",
+        "pipeline",
+        "technical",
+        "analysis",
+        "scheduler",
         "주식",
         "뉴스",
-        "news",
-        "기술적분석",
-        "technical",
-        "analyst",
-        "아날리스트",
-        "pipeline",
-        "파이프라인"
+        "기술분석",
+        "파이프라인",
+        "브리핑"
       ],
       "custom_agents": [
         "nc",
@@ -112,8 +111,40 @@
     "default_project": "PRJ-SIGNAL-001",
     "keyword_matching": true,
     "agent_layer_routing": {
-      "build_keywords": ["구현", "implement", "코드", "code", "리뷰", "review", "테스트", "test", "배포", "deploy"],
-      "runtime_keywords": ["뉴스수집", "news collect", "기술지표", "technical indicator", "감성분석", "sentiment", "브리핑", "briefing"]
+      "build_keywords": [
+        "implement",
+        "implementation",
+        "code",
+        "review",
+        "test",
+        "testing",
+        "deploy",
+        "architecture",
+        "ui",
+        "ux",
+        "frontend",
+        "backend",
+        "구현",
+        "코드",
+        "리뷰",
+        "테스트",
+        "배포",
+        "설계"
+      ],
+      "runtime_keywords": [
+        "news collect",
+        "market data",
+        "technical indicator",
+        "sentiment",
+        "briefing",
+        "cross validation",
+        "scheduler",
+        "뉴스수집",
+        "시장데이터",
+        "기술지표",
+        "감성분석",
+        "브리핑"
+      ]
     }
   }
 }

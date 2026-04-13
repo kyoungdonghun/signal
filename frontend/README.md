@@ -1,73 +1,65 @@
-# React + TypeScript + Vite
+# SIGNAL Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Purpose
 
-Currently, two official plugins are available:
+This frontend is the SIGNAL viewer layer for:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- latest ticker status
+- per-ticker run history
+- run detail inspection
+- user commit and track-record flows
 
-## React Compiler
+It is a React + TypeScript + Vite application and talks to the Spring backend at `http://localhost:8080/api` by default.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Main Routes
 
-## Expanding the ESLint configuration
+- `/` : ticker grid
+- `/ticker/:ticker` : ticker detail
+- `/ticker/:ticker/:runId` : run detail
+- `/track-record` : track-record view
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Route wiring lives in [src/App.tsx](/C:/Users/jm991/Desktop/project/Signal/frontend/src/App.tsx).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Development
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Install dependencies:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```powershell
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Start the frontend dev server:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```powershell
+npm run dev
 ```
+
+Build for production:
+
+```powershell
+npm run build
+```
+
+Run lint:
+
+```powershell
+npm run lint
+```
+
+## Backend Dependency
+
+This frontend expects the backend API to be available locally.
+Base API configuration lives in [src/api/client.ts](/C:/Users/jm991/Desktop/project/Signal/frontend/src/api/client.ts).
+
+Default API base:
+
+```text
+http://localhost:8080/api
+```
+
+If the backend is not running, pages that fetch runs, scheduler logs, or user commits will fail to load data.
+
+## Notes
+
+- The frontend is a viewer and interaction layer. Core scheduling and pipeline execution remain on the backend.
+- UI text includes Korean market-facing labels, so repository UTF-8 settings should be preserved.

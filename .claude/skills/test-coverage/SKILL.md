@@ -113,9 +113,9 @@ Report results in structured format:
 2. Add exception path tests for `MusicService.deleteTrack()`
 ```
 
-## Coverage Thresholds (ATStudio Standards)
+## Coverage Thresholds (Current Working Baseline)
 
-Per `docs/standards/development-standards.md` Section 6.3:
+SIGNAL does not yet have a full vendor-neutral coverage policy document. Use these thresholds as working guidance, not as a repository-wide constitution:
 
 | Metric | Threshold |
 |--------|-----------|
@@ -124,11 +124,11 @@ Per `docs/standards/development-standards.md` Section 6.3:
 | Methods/Functions | 80% |
 | Statements/Instructions | 80% |
 
-**100% coverage required for:** Security code, JWT/auth logic, business rule validators.
+**Prefer near-complete coverage for:** Security code, auth logic, and critical business rule validators.
 
 ## Integration
 
 - Runs as part of `qa` agent comprehensive check
 - Supplements `/test` skill with coverage metrics
 - Results inform `cr` agent review decisions
-- Required before WI completion (per Evidence Pack standards)
+- Use before task completion when coverage is part of the acceptance bar

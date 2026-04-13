@@ -10,25 +10,20 @@
 set -e
 
 echo ""
-echo "🧪 Running unit tests..."
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "Running unit tests..."
+echo "----------------------------------------"
 
-# Run fast unit tests only
-# Adjust command based on your test framework:
-# - Jest: npm test -- --testPathIgnorePatterns=integration
-# - Vitest: npm run test:unit
-# - pytest: pytest tests/unit/
-
-if ! claude code /test 2>&1 | tail -20; then
+# Run the current backend automated test baseline
+if ! ./gradlew test; then
   echo ""
-  echo "❌ Tests failed"
-  echo "💡 Fix: Run '/test' to see details"
+  echo "Tests failed"
+  echo "Fix: Run './gradlew test' to see details"
   echo ""
   exit 1
 fi
 
 echo ""
-echo "✅ All tests passed"
+echo "All tests passed"
 echo ""
 
 exit 0

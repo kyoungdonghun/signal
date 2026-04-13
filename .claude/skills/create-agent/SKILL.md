@@ -1,17 +1,17 @@
 ---
 name: create-agent
-description: Subagent Creator - Create standardized subagents for the meta framework. This skill should be used when adding new subagents to .claude/agents/ with proper YAML frontmatter, initialization requirements, mandatory rules, and output specifications.
+description: Agent Creator - Create standardized SIGNAL-focused agents under .claude/agents/ with proper YAML frontmatter, initialization requirements, mandatory rules, and output specifications.
 ---
 
 # Create Agent
 
 ## Overview
 
-Create standardized subagents that integrate seamlessly with the MA + Subagent orchestration framework. This skill ensures all agents follow consistent patterns for initialization, rules, and output contracts.
+Create standardized agents that integrate with the current SIGNAL orchestration files. This skill ensures agent files follow consistent patterns for initialization, rules, and output contracts.
 
 ## When to Use
 
-- When adding a new specialized subagent to the framework
+- When adding a new specialized agent to the framework
 - When standardizing an existing agent to match framework conventions
 - When the routing matrix needs a new role not covered by existing agents
 
@@ -68,7 +68,7 @@ You are <NAME>. Your goal is to <primary objective in quotes>.
 
 ```markdown
 ## Mandatory Rules
-- At task start, treat `docs/standards/core-principles.md` (constitution) as baseline injection and prohibit violations.
+- At task start, treat `AGENTS.md` and `CLAUDE.md` as the current constitutional baseline and prohibit violations.
 - <Agent-specific rule 1>
 - <Agent-specific rule 2>
 - Always create deliverables in **two sets**:
@@ -98,9 +98,9 @@ Based on agent complexity, add:
 
 After creating the agent file, update framework registration:
 
-1. Add to CLAUDE.md routing matrix
+1. Add to CLAUDE.md routing matrix if applicable
 2. Add to `.claude/config/workspace.json` agents array
-3. Document in `docs/guides/` if specialized workflow needed
+3. Document in project docs if a specialized workflow is needed
 
 ## Agent Naming Conventions
 
@@ -131,7 +131,7 @@ Before finalizing an agent, verify:
 
 - [ ] YAML frontmatter has all 4 required fields
 - [ ] Role statement clearly defines mission
-- [ ] Mandatory Rules includes constitution reference
+- [ ] Mandatory Rules includes current project constitution reference
 - [ ] Two-set deliverable rule is included
 - [ ] Output specification defines minimum outputs
 - [ ] Agent is registered in CLAUDE.md routing matrix

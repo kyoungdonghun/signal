@@ -98,12 +98,12 @@ Report results in structured format:
 | Issue | Cause | Solution |
 |-------|-------|----------|
 | Module not found | Missing import/dependency | Check import path, install package |
-| Type errors | TypeScript compilation | Fix type issues (see `/typecheck`) |
+| Type errors | TypeScript compilation | Fix type issues in the TypeScript build step |
 | Out of memory | Large build | Increase Node memory limit |
 
 ## Integration
 
 - Final check in `qa` agent quality workflow
-- Java: Runs after `/typecheck`, `/lint`, `/test`
-- JS: Runs after `/typecheck`, `/eslint`, `/test`
+- Java: Typically runs after lint and test verification
+- JS: Typically runs after lint and test verification
 - Success required before deployment

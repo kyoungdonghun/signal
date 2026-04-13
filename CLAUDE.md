@@ -97,14 +97,15 @@ Codex가 SIGNAL을 쓸 때는 `AGENTS.md` + `.codex/` 설정만 추가하면 된
 
 ## Architecture — Two Layers
 
-### Build Layer (프로젝트를 만드는 에이전트)
-ATStudio에서 가져온 범용 개발 에이전트 11개.
+### Build Layer (웹 애플리케이션을 만드는 작업자)
+SIGNAL 자체를 기획/설계/구현/검증하는 일반 개발 작업자 계층.
+ATStudio 특화 절차(REQ/WI/handoff)는 제거 대상이지만, 앱을 만드는 역할 자체는 유지한다.
 Location: `.claude/agents/build/`
 
 | Agent | Role |
 |-------|------|
 | EO | Routing/Governance |
-| PS | Requirements |
+| PS | Product/Requirement Framing |
 | SA | Architecture |
 | SE | Implementation |
 | CR | Code Review |
@@ -112,7 +113,7 @@ Location: `.claude/agents/build/`
 | RE | Independent Verification |
 | PG | Security |
 | TR | Technical Research |
-| UV | API/UI Spec |
+| UV | UI/API Design |
 | DocOps | Documentation |
 
 ### Runtime Layer (주식 분석을 수행하는 에이전트)
@@ -162,6 +163,8 @@ NT (태깅)                           |
 | `.claude/config/context-injection-rules.json` | 에이전트별 문서 주입 규칙 |
 | `.claude/config/afterSource.md` | 에이전트 고도화 후보 (Phase 2~4) |
 | `.claude/config/afterSourceForConfigSkills.md` | Config/Skills 고도화 후보 |
+
+**정리 원칙:** Build Layer의 일반 개발 작업자는 유지한다. 다만 REQ/WI/handoff/evidence 같은 ATStudio 특화 절차 자산은 SIGNAL 현재 운영 기준에서 제거 대상이다.
 
 ## Phase Roadmap
 
